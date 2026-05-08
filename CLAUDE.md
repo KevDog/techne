@@ -6,6 +6,10 @@
 
 **Documentation files:** `REQUIREMENTS.md`, `ARCHITECTURE.md`, `PLAN.md`, `DECISIONS.md`, `GLOSSARY.md`, `LEARNINGS.md`
 
+**Skill path overrides:**
+- Specs → `docs/specs/` (not `docs/superpowers/specs/`)
+- Plans → `docs/plans/` (not `docs/superpowers/plans/`)
+
 ---
 
 @docs/claude/workflow.md
