@@ -5,7 +5,10 @@ vi.mock('@supabase/ssr', () => ({
 }))
 
 vi.mock('next/headers', () => ({
-  cookies: vi.fn(() => ({ get: vi.fn(), set: vi.fn(), delete: vi.fn() })),
+  cookies: vi.fn(() => ({
+    getAll: vi.fn().mockReturnValue([]),
+    setAll: vi.fn(),
+  })),
 }))
 
 describe('createSupabaseServerClient', () => {
