@@ -7,7 +7,7 @@ Decisions are append-only. To reverse a decision, add a new entry superseding th
 ## ADR-001: Next.js as Application Framework
 
 **Date:** 2026-05-07
-**Status:** Accepted
+**Status:** Accepted (updated 2026-05-07: using Next.js 16.2.6, not 14 — `create-next-app@latest` resolved to 16; App Router patterns are identical)
 
 **Decision:** Use Next.js 14 with App Router as the front-end framework.
 
