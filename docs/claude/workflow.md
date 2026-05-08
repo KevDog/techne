@@ -6,19 +6,26 @@
 2. Socratic brainstorm → `ARCHITECTURE.md`
 3. Write `PLAN.md`
 
+## Branch Strategy
+
+- `main` is protected — no direct pushes, all changes via PR
+- Branch naming: `feat/`, `fix/`, `chore/` prefixes (e.g. `feat/materials-upload`)
+- One branch per feature or decision
+
 ## Starting a feature or critical decision
 
-1. Socratic brainstorm (use `superpowers:brainstorming` skill)
-2. Update `PLAN.md` if scope changes
-3. Set up isolated workspace (`superpowers:using-git-worktrees` skill)
-4. Check `GLOSSARY.md` — define any new domain terms before naming things
-5. Ask: can any tasks run in parallel? → `superpowers:dispatching-parallel-agents` skill
-6. Implement (use `superpowers:test-driven-development` skill — tests first)
-7. Verify (use `superpowers:verification-before-completion` skill before claiming done)
-8. Request code review (`superpowers:requesting-code-review` skill)
-9. If ADR-worthy decision made → append to `DECISIONS.md`
-10. Update `LEARNINGS.md` if a new orchestration pattern was used
-11. Close branch (`superpowers:finishing-a-development-branch` skill)
+1. Create a branch: `git checkout -b feat/<feature-name>`
+2. Socratic brainstorm (use `superpowers:brainstorming` skill)
+3. Update `PLAN.md` if scope changes
+4. Set up isolated workspace (`superpowers:using-git-worktrees` skill)
+5. Check `GLOSSARY.md` — define any new domain terms before naming things
+6. Ask: can any tasks run in parallel? → `superpowers:dispatching-parallel-agents` skill
+7. Implement (use `superpowers:test-driven-development` skill — tests first)
+8. Verify (use `superpowers:verification-before-completion` skill before claiming done)
+9. Request code review (`superpowers:requesting-code-review` skill)
+10. If ADR-worthy decision made → append to `DECISIONS.md`
+11. Update `LEARNINGS.md` if a new orchestration pattern was used
+12. Close branch (`superpowers:finishing-a-development-branch` skill)
 
 ## When receiving code review feedback
 
