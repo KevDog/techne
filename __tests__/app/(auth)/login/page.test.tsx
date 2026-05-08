@@ -12,6 +12,20 @@ vi.mock('@/lib/supabase/client', () => ({
 }))
 
 describe('LoginPage', () => {
+  it('shows error message when signInWithOtp fails', async () => {
+    mockSignInWithOtp.mockResolvedValueOnce({ error: { message: 'Rate limit exceeded' } })
+    const { default: LoginPage } = await import('@/app/(auth)/login/page')
+    render(<LoginPage />)
+    fireEvent.change(screen.getByLabelText(/email/i), {
+      target: { value: 'test@example.com' },
+    })
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /send magic link/i }))
+    })
+    expect(screen.getByRole('alert')).toHaveTextContent('Rate limit exceeded')
+  })
+
+
   it('renders email input and submit button', async () => {
     const { default: LoginPage } = await import('@/app/(auth)/login/page')
     render(<LoginPage />)

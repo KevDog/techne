@@ -6,16 +6,21 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client'
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const supabase = createSupabaseBrowserClient()
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    await supabase.auth.signInWithOtp({
+    const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     })
+    if (error) {
+      setErrorMessage(error.message)
+      return
+    }
     setSubmitted(true)
   }
 
@@ -33,6 +38,7 @@ export default function LoginPage() {
         onChange={(e) => setEmail(e.target.value)}
         required
       />
+      {errorMessage && <p role="alert">{errorMessage}</p>}
       <button type="submit">Send magic link</button>
     </form>
   )
