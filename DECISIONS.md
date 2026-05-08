@@ -130,3 +130,12 @@ Conferencing is a solved problem (Zoom, Meet, phone). Building it would add sign
 
 **Rationale:**
 There is no standard organizational structure in theater. A university production, a LORT theater, a community theater, and a commercial production all have different role names and hierarchies. Hardcoding roles would exclude the majority of potential users.
+
+## ADR-011: Auth Callback Route Outside Route Groups
+
+**Date:** 2026-05-07
+**Status:** Accepted
+
+**Decision:** The Supabase auth callback handler lives at `app/auth/callback/route.ts` (real directory), not inside `app/(auth)/` (route group).
+
+**Rationale:** Next.js route groups (parenthesized folders) are organizational only — they do not add segments to the URL. `app/(auth)/callback/route.ts` resolves to `/callback`, not `/auth/callback`. Since `signInWithOtp` redirects to `/auth/callback`, the handler must be in a real `auth/` directory.
