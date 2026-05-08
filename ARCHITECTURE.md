@@ -157,7 +157,7 @@ When `org.settings.claude_enabled = false`: all agent UI entry points are hidden
 
 | Plan | Subsystem | File |
 | --- | --- | --- |
-| 1 | Scaffold + Auth | `docs/superpowers/plans/2026-05-07-plan-1-scaffold-auth.md` |
+| 1 | Scaffold + Auth | `docs/plans/2026-05-07-plan-1-scaffold-auth.md` |
 | 2 | Data hierarchy + Flexible roles | TBD |
 | 3 | Materials + Annealing workflow | TBD |
 | 4 | Notes system | TBD |

@@ -18,4 +18,4 @@
 
 ## Design Spec
 
-See `docs/superpowers/specs/2026-05-07-framework-selection-design.md` for full architectural decisions and rationale.
+See `docs/specs/2026-05-07-framework-selection-design.md` for full architectural decisions and rationale.

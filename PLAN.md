@@ -7,7 +7,7 @@
 
 | Plan | Subsystem | Status | File |
 | --- | --- | --- | --- |
-| 1 | Scaffold + Auth | Ready | `docs/superpowers/plans/2026-05-07-plan-1-scaffold-auth.md` |
+| 1 | Scaffold + Auth | Ready | `docs/plans/2026-05-07-plan-1-scaffold-auth.md` |
 | 2 | Data hierarchy + Flexible roles | Not started | TBD |
 
 ### Milestone 2: Core Collaboration
@@ -46,4 +46,4 @@ See `REQUIREMENTS.md` — **pending brainstorm session.**
 
 ## Architecture
 
-See `ARCHITECTURE.md` and `docs/superpowers/specs/2026-05-07-framework-selection-design.md`.
+See `ARCHITECTURE.md` and `docs/specs/2026-05-07-framework-selection-design.md`.
