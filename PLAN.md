@@ -42,7 +42,7 @@ Plans 3, 4, and 5 are independent of each other — candidates for parallel exec
 
 ## Requirements
 
-See `REQUIREMENTS.md` — **pending brainstorm session.**
+See `REQUIREMENTS.md` and `docs/specs/2026-05-07-requirements-design.md`.
 
 ## Architecture
 
