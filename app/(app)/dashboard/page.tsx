@@ -13,7 +13,7 @@ export default async function DashboardPage() {
     <main>
       <h1>Your Organizations</h1>
       <ul>
-        {(orgs as Org[] ?? []).map((org) => (
+        {((orgs ?? []) as Org[]).map((org) => (
           <li key={org.id}>{org.name}</li>
         ))}
       </ul>
