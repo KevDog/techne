@@ -71,6 +71,15 @@ create policy "org members can update materials"
       where d.id = materials.department_id
         and om.user_id = auth.uid()
     )
+  )
+  with check (
+    exists (
+      select 1 from public.departments d
+      join public.shows s on s.id = d.show_id
+      join public.org_members om on om.org_id = s.org_id
+      where d.id = materials.department_id
+        and om.user_id = auth.uid()
+    )
   );
 
 create policy "uploaders can delete materials"
@@ -89,7 +98,7 @@ create policy "org members can upload material files"
     bucket_id = 'materials'
     and exists (
       select 1 from public.org_members
-      where org_id = (storage.foldername(name))[1]::uuid
+      where org_id = split_part(name, '/', 1)::uuid
         and user_id = auth.uid()
     )
   );
@@ -100,7 +109,7 @@ create policy "org members can read material files"
     bucket_id = 'materials'
     and exists (
       select 1 from public.org_members
-      where org_id = (storage.foldername(name))[1]::uuid
+      where org_id = split_part(name, '/', 1)::uuid
         and user_id = auth.uid()
     )
   );
@@ -111,7 +120,7 @@ create policy "org members can delete material files"
     bucket_id = 'materials'
     and exists (
       select 1 from public.org_members
-      where org_id = (storage.foldername(name))[1]::uuid
+      where org_id = split_part(name, '/', 1)::uuid
         and user_id = auth.uid()
     )
   );
