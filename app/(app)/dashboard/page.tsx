@@ -9,11 +9,21 @@ export default async function DashboardPage() {
     .from('orgs')
     .select('*')
 
+  const typedOrgs: Org[] = (orgs ?? []).map((org) => ({
+    id: org.id,
+    name: org.name,
+    slug: org.slug,
+    createdAt: org.created_at,
+    settings: (org.settings ?? { claude_enabled: false }) as {
+      claude_enabled: boolean
+    },
+  }))
+
   return (
     <main>
       <h1>Your Organizations</h1>
       <ul>
-        {((orgs ?? []) as Org[]).map((org) => (
+        {typedOrgs.map((org) => (
           <li key={org.id}>{org.name}</li>
         ))}
       </ul>
