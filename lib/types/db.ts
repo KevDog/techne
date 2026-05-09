@@ -170,18 +170,21 @@ export type Database = {
           id: string
           show_id: string
           name: string
+          slug: string
           created_at: string
         }
         Insert: {
           id?: string
           show_id: string
           name: string
+          slug: string
           created_at?: string
         }
         Update: {
           id?: string
           show_id?: string
           name?: string
+          slug?: string
           created_at?: string
         }
         Relationships: [
@@ -190,6 +193,66 @@ export type Database = {
             columns: ["show_id"]
             isOneToOne: false
             referencedRelation: "shows"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      materials: {
+        Row: {
+          id: string
+          department_id: string
+          uploaded_by: string
+          type: string
+          state: string
+          title: string
+          description: string | null
+          url: string | null
+          storage_path: string | null
+          body: string | null
+          tags: string[]
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          department_id: string
+          uploaded_by: string
+          type: string
+          state?: string
+          title: string
+          description?: string | null
+          url?: string | null
+          storage_path?: string | null
+          body?: string | null
+          tags?: string[]
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          department_id?: string
+          uploaded_by?: string
+          type?: string
+          state?: string
+          title?: string
+          description?: string | null
+          url?: string | null
+          storage_path?: string | null
+          body?: string | null
+          tags?: string[]
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "materials_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "materials_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           }
         ]

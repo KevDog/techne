@@ -46,6 +46,7 @@ export type Department = {
   id: string
   showId: string
   name: string
+  slug: string
   createdAt: string
 }
 
@@ -71,4 +72,22 @@ export type Profile = {
   id: string
   displayName: string | null
   updatedAt: string
+}
+
+export type MaterialType = 'image' | 'file' | 'link' | 'note'
+export type MaterialState = 'exploratory' | 'proposed' | 'decided'
+
+export type Material = {
+  id: string
+  departmentId: string
+  uploadedBy: string
+  type: MaterialType
+  state: MaterialState
+  title: string
+  description: string | null
+  url: string | null
+  storagePath: string | null
+  body: string | null
+  tags: string[]
+  createdAt: string
 }
