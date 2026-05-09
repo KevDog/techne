@@ -5,6 +5,7 @@
 1. Socratic brainstorm → `REQUIREMENTS.md`
 2. Socratic brainstorm → `ARCHITECTURE.md`
 3. Write `PLAN.md`
+4. Socratic interview → `USER_STORIES.md` (one story per requirement; include acceptance criteria)
 
 ## Branch Strategy
 
