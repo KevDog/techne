@@ -19,7 +19,6 @@ describe('domain types', () => {
   })
 
   it('MaterialState covers all states', () => {
-    const s: MaterialState = 'exploratory'
-    expectTypeOf(s).toEqualTypeOf<'exploratory' | 'proposed' | 'decided'>()
+    expectTypeOf<MaterialState>().toEqualTypeOf<'exploratory' | 'proposed' | 'decided'>()
   })
 })
