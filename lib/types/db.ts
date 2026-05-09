@@ -226,6 +226,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "orgs"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "role_definitions_show_id_fkey"
+            columns: ["show_id"]
+            isOneToOne: false
+            referencedRelation: "shows"
+            referencedColumns: ["id"]
           }
         ]
       }
@@ -267,6 +274,13 @@ export type Database = {
             columns: ["role_definition_id"]
             isOneToOne: false
             referencedRelation: "role_definitions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "show_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           }
         ]

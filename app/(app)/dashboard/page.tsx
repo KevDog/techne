@@ -1,5 +1,5 @@
 import { createSupabaseServerClient } from '@/lib/supabase/server'
-import type { Org } from '@/lib/types/domain'
+import type { Org, OrgSettings } from '@/lib/types/domain'
 
 export default async function DashboardPage() {
   const supabase = await createSupabaseServerClient()
@@ -14,9 +14,7 @@ export default async function DashboardPage() {
     name: org.name,
     slug: org.slug,
     createdAt: org.created_at,
-    settings: (org.settings ?? { claude_enabled: false }) as {
-      claude_enabled: boolean
-    },
+    settings: (org.settings ?? { claudeEnabled: false }) as OrgSettings,
   }))
 
   return (

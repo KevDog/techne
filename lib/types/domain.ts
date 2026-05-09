@@ -1,5 +1,5 @@
 export type OrgSettings = {
-  claude_enabled: boolean
+  claudeEnabled: boolean
 }
 
 export type Org = {
