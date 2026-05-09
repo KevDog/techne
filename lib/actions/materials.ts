@@ -92,6 +92,8 @@ export async function updateTags(
   tags: string[]
 ): Promise<void> {
   const supabase = await createSupabaseServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
   const { error } = await supabase
     .from('materials')
     .update({ tags })
@@ -115,7 +117,10 @@ export async function deleteMaterial(materialId: string): Promise<void> {
   if (material.uploaded_by !== user.id) throw new Error('Unauthorized')
 
   if (material.storage_path) {
-    await supabase.storage.from('materials').remove([material.storage_path])
+    const { error: storageError } = await supabase.storage
+      .from('materials')
+      .remove([material.storage_path])
+    if (storageError) throw new Error(storageError.message)
   }
 
   const { error } = await supabase.from('materials').delete().eq('id', materialId)

@@ -366,14 +366,13 @@ function UploadPanel({
     if (!title.trim()) return
     setUploading(true)
 
+    let uploadedPath: string | undefined
     try {
-      let storagePath: string | undefined
-
       if ((type === 'image' || type === 'file') && file) {
         const supabase = createSupabaseBrowserClient()
         const uploadUuid = crypto.randomUUID()
-        storagePath = `${orgId}/${showId}/${deptId}/${uploadUuid}/${file.name}`
-        const { error } = await supabase.storage.from('materials').upload(storagePath, file)
+        uploadedPath = `${orgId}/${showId}/${deptId}/${uploadUuid}/${file.name}`
+        const { error } = await supabase.storage.from('materials').upload(uploadedPath, file)
         if (error) throw error
       }
 
@@ -381,12 +380,18 @@ function UploadPanel({
         title: title.trim(),
         description: description.trim() || undefined,
         url: type === 'link' ? url.trim() : undefined,
-        storagePath,
+        storagePath: uploadedPath,
         body: type === 'note' ? body.trim() : undefined,
         tags: tags.split(',').map((t) => t.trim()).filter(Boolean),
       })
 
       onClose()
+    } catch (err) {
+      if (uploadedPath) {
+        const supabase = createSupabaseBrowserClient()
+        await supabase.storage.from('materials').remove([uploadedPath])
+      }
+      throw err
     } finally {
       setUploading(false)
     }
