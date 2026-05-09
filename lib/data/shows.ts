@@ -49,6 +49,8 @@ export const getShowsByOrg = cache(async (org: Org): Promise<ShowWithRelations[]
   }))
 })
 
+// ShowDetail overrides departments from ShowWithRelations (which only has { id }) to include
+// name, slug, and created_at for the detail view. getShowsByOrg callers should not cast to ShowDetail.
 export type ShowDetail = ShowWithRelations & {
   departments: { id: string; name: string; slug: string; created_at: string }[]
 }

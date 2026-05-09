@@ -13,7 +13,7 @@ const mockShow: ShowDetail = {
   createdAt: '2026-01-01',
   season: { name: '2025–26 Season', slug: '2025-26' },
   departments: [
-    { id: 'd1', name: 'Scenic Design',  slug: 'scenic-design',  created_at: '2026-01-01' },
+    { id: 'd1', name: 'Scenic Design', slug: 'scenic-design', created_at: '2026-01-01' },
     { id: 'd2', name: 'Costume Design', slug: 'costume-design', created_at: '2026-01-01' },
   ],
   show_members: [
