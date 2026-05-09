@@ -79,11 +79,13 @@ export default async function ShowDetailPage({ params }: Props) {
           <p className="text-xs font-medium uppercase tracking-widest text-zinc-500 mb-4">Departments</p>
           <ul className="divide-y divide-zinc-200 dark:divide-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-800 overflow-hidden">
             {show.departments.map((dept) => (
-              <li
-                key={dept.id}
-                className="flex items-center justify-between px-4 py-3 text-sm font-medium text-zinc-900 dark:text-zinc-100"
-              >
-                {dept.name}
+              <li key={dept.id}>
+                <Link
+                  href={`/${orgSlug}/shows/${showSlug}/departments/${dept.slug}`}
+                  className="flex items-center justify-between px-4 py-3 text-sm font-medium text-zinc-900 dark:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900"
+                >
+                  {dept.name}
+                </Link>
               </li>
             ))}
           </ul>

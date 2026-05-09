@@ -65,6 +65,8 @@ Organization
                     ├── meetings: Meeting[]
                     └── Departments[]
                                 └── Materials[]
+                                            ├── type ∈ {image, file, link, note}
+                                            ├── state ∈ {exploratory, proposed, decided}
                                             └── notes: Note[]
 ```
 
@@ -125,6 +127,12 @@ Notes exist at three levels, all stored in Supabase:
 | Meeting | A specific meeting record | All show members |
 
 Notes are not subject to the material approval workflow.
+
+---
+
+## Storage
+
+Supabase Storage → private bucket `materials`; path `{org_id}/{show_id}/{dept_id}/{uuid}/{filename}`; browser-direct upload; signed URLs (1h TTL) generated server-side
 
 ---
 
