@@ -24,4 +24,12 @@ describe('DashboardPage', () => {
     expect(screen.getByText('State University Theater')).toBeInTheDocument()
     expect(screen.getByText('Riverside Regional')).toBeInTheDocument()
   })
+
+  it('links each org to its shows page', async () => {
+    const { default: DashboardPage } = await import('@/app/(app)/dashboard/page')
+    const jsx = await DashboardPage()
+    render(jsx)
+    const link = screen.getByRole('link', { name: 'State University Theater' })
+    expect(link).toHaveAttribute('href', '/state-u-theater/shows')
+  })
 })
