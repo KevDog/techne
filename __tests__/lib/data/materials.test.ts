@@ -53,6 +53,7 @@ vi.mock('@/lib/supabase/server', () => ({
 
 describe('getMaterialsByDepartment', () => {
   beforeEach(() => {
+    vi.resetModules()
     vi.clearAllMocks()
   })
 
