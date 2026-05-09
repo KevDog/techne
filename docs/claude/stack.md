@@ -8,7 +8,8 @@
 | Real-time | Liveblocks |
 | Auth + DB + Storage | Supabase |
 | AI agents | Claude API (via Server Actions) |
-| Styling | Tailwind CSS |
+| Styling | Tailwind CSS v4 |
+| UI Components | Tailwind Plus (500+ blocks, React + Headless UI) |
 | Testing | Vitest + Testing Library |
 
 ## Agent Assignments

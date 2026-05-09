@@ -17,16 +17,17 @@
 
 1. Create a branch: `git checkout -b feat/<feature-name>`
 2. Socratic brainstorm (use `superpowers:brainstorming` skill)
-3. Update `PLAN.md` if scope changes
-4. Set up isolated workspace (`superpowers:using-git-worktrees` skill)
-5. Check `GLOSSARY.md` — define any new domain terms before naming things
-6. Ask: can any tasks run in parallel? → `superpowers:dispatching-parallel-agents` skill
-7. Implement (use `superpowers:test-driven-development` skill — tests first)
-8. Verify (use `superpowers:verification-before-completion` skill before claiming done)
-9. Request code review (`superpowers:requesting-code-review` skill)
-10. If ADR-worthy decision made → append to `DECISIONS.md`
-11. Update `LEARNINGS.md` if a new orchestration pattern was used
-12. Close branch (`superpowers:finishing-a-development-branch` skill)
+3. Design UI with Tailwind Plus components (use `frontend-design` agent) — every feature
+4. Update `PLAN.md` if scope changes
+5. Set up isolated workspace (`superpowers:using-git-worktrees` skill)
+6. Check `GLOSSARY.md` — define any new domain terms before naming things
+7. Ask: can any tasks run in parallel? → `superpowers:dispatching-parallel-agents` skill
+8. Implement (use `superpowers:test-driven-development` skill — tests first)
+9. Verify (use `superpowers:verification-before-completion` skill before claiming done)
+10. Request code review (`superpowers:requesting-code-review` skill)
+11. If ADR-worthy decision made → append to `DECISIONS.md`
+12. Update `LEARNINGS.md` if a new orchestration pattern was used
+13. Close branch (`superpowers:finishing-a-development-branch` skill)
 
 ## When receiving code review feedback
 
