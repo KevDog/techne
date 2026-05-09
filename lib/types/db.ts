@@ -257,6 +257,78 @@ export type Database = {
           }
         ]
       }
+      notes: {
+        Row: {
+          id: string
+          body: string
+          tags: string[]
+          created_by: string
+          updated_by: string
+          created_at: string
+          updated_at: string
+          hidden_at: string | null
+          material_id: string | null
+          show_id: string | null
+          meeting_id: string | null
+        }
+        Insert: {
+          id?: string
+          body: string
+          tags?: string[]
+          created_by: string
+          updated_by: string
+          created_at?: string
+          updated_at?: string
+          hidden_at?: string | null
+          material_id?: string | null
+          show_id?: string | null
+          meeting_id?: string | null
+        }
+        Update: {
+          id?: string
+          body?: string
+          tags?: string[]
+          created_by?: string
+          updated_by?: string
+          created_at?: string
+          updated_at?: string
+          hidden_at?: string | null
+          material_id?: string | null
+          show_id?: string | null
+          meeting_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notes_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notes_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notes_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "materials"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notes_show_id_fkey"
+            columns: ["show_id"]
+            isOneToOne: false
+            referencedRelation: "shows"
+            referencedColumns: ["id"]
+          },
+          // meeting_id has no FK in Plan 4 — meetings table added in Plan 5
+        ]
+      }
       role_definitions: {
         Row: {
           id: string
