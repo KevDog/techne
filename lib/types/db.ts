@@ -49,20 +49,241 @@ export type Database = {
           id: string
           name: string
           slug: string
+          settings: Json
         }
         Insert: {
           created_at?: string
           id?: string
           name: string
           slug: string
+          settings?: Json
         }
         Update: {
           created_at?: string
           id?: string
           name?: string
           slug?: string
+          settings?: Json
         }
         Relationships: []
+      }
+      profiles: {
+        Row: {
+          id: string
+          display_name: string | null
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          display_name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          display_name?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      seasons: {
+        Row: {
+          id: string
+          org_id: string
+          name: string
+          slug: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          name: string
+          slug: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          name?: string
+          slug?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seasons_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "orgs"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      shows: {
+        Row: {
+          id: string
+          org_id: string
+          season_id: string | null
+          name: string
+          slug: string
+          approval_mode: string
+          allow_reopen: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          season_id?: string | null
+          name: string
+          slug: string
+          approval_mode?: string
+          allow_reopen?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          season_id?: string | null
+          name?: string
+          slug?: string
+          approval_mode?: string
+          allow_reopen?: boolean
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shows_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "orgs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shows_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      departments: {
+        Row: {
+          id: string
+          show_id: string
+          name: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          show_id: string
+          name: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          show_id?: string
+          name?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "departments_show_id_fkey"
+            columns: ["show_id"]
+            isOneToOne: false
+            referencedRelation: "shows"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      role_definitions: {
+        Row: {
+          id: string
+          org_id: string
+          show_id: string | null
+          name: string
+          permissions: string[]
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          show_id?: string | null
+          name: string
+          permissions?: string[]
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          show_id?: string | null
+          name?: string
+          permissions?: string[]
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_definitions_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "orgs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "role_definitions_show_id_fkey"
+            columns: ["show_id"]
+            isOneToOne: false
+            referencedRelation: "shows"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      show_members: {
+        Row: {
+          id: string
+          show_id: string
+          user_id: string
+          role_definition_id: string
+          featured: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          show_id: string
+          user_id: string
+          role_definition_id: string
+          featured?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          show_id?: string
+          user_id?: string
+          role_definition_id?: string
+          featured?: boolean
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "show_members_show_id_fkey"
+            columns: ["show_id"]
+            isOneToOne: false
+            referencedRelation: "shows"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "show_members_role_definition_id_fkey"
+            columns: ["role_definition_id"]
+            isOneToOne: false
+            referencedRelation: "role_definitions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "show_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {
