@@ -8,7 +8,7 @@
 | Plan | Subsystem | Status | File |
 | --- | --- | --- | --- |
 | 1 | Scaffold + Auth | Ready | `docs/plans/2026-05-07-plan-1-scaffold-auth.md` |
-| 2 | Data hierarchy + Flexible roles | Not started | TBD |
+| 2 | Data hierarchy + Flexible roles | Complete | `docs/plans/2026-05-09-plan-2-data-hierarchy-roles.md` |
 
 ### Milestone 2: Core Collaboration
 > Designers can upload materials, add notes, and move them through the annealing lifecycle.
