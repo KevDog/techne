@@ -21,21 +21,21 @@ create policy "users can update own profile"
   using (id = auth.uid());
 
 -- Auto-create profile on sign-up
-create function public.handle_new_user()
+create or replace function public.handle_new_user()
 returns trigger as $$
 begin
   insert into public.profiles (id, display_name)
   values (
     new.id,
-    coalesce(new.raw_user_meta_data->>'full_name', split_part(new.email, '@', 1))
+    left(coalesce(new.raw_user_meta_data->>'full_name', split_part(new.email, '@', 1)), 255)
   );
   return new;
 end;
-$$ language plpgsql security definer;
+$$ language plpgsql security definer set search_path = public;
 
 create trigger on_auth_user_created
   after insert on auth.users
-  for each row execute procedure public.handle_new_user();
+  for each row execute function public.handle_new_user();
 
 -- Seasons
 create table public.seasons (
@@ -132,7 +132,7 @@ create table public.show_members (
   id uuid primary key default gen_random_uuid(),
   show_id uuid not null references public.shows(id) on delete cascade,
   user_id uuid not null references public.profiles(id) on delete cascade,
-  role_definition_id uuid not null references public.role_definitions(id),
+  role_definition_id uuid not null references public.role_definitions(id) on delete restrict,
   featured boolean not null default false,
   created_at timestamptz not null default now(),
   unique(show_id, user_id)
@@ -154,3 +154,12 @@ create policy "org members can view show members"
         and org_members.user_id = auth.uid()
     )
   );
+
+create index on public.seasons (org_id);
+create index on public.shows (org_id);
+create index on public.shows (season_id);
+create index on public.departments (show_id);
+create index on public.role_definitions (org_id);
+create index on public.show_members (show_id);
+create index on public.show_members (user_id);
+create index on public.show_members (role_definition_id);
