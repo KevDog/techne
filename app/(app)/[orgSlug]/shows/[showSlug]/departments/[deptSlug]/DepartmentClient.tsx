@@ -43,7 +43,6 @@ export function DepartmentClient({ materials, orgId, showId, deptId, allowReopen
   const [activeTab, setActiveTab] = useState<TabFilter>('all')
   const [selected, setSelected] = useState<MaterialWithUrl | null>(null)
   const [uploadOpen, setUploadOpen] = useState(false)
-  const [newTag, setNewTag] = useState('')
   const [, startTransition] = useTransition()
 
   const filtered = activeTab === 'all'
@@ -61,15 +60,6 @@ export function DepartmentClient({ materials, orgId, showId, deptId, allowReopen
     startTransition(async () => {
       await transitionState(materialId, target)
       setSelected(null)
-    })
-  }
-
-  function handleAddTag(materialId: string, currentTags: string[]) {
-    const tag = newTag.trim()
-    if (!tag) return
-    startTransition(async () => {
-      await updateTags(materialId, [...currentTags, tag])
-      setNewTag('')
     })
   }
 
@@ -173,11 +163,11 @@ export function DepartmentClient({ materials, orgId, showId, deptId, allowReopen
         <DetailPanel
           material={selected}
           allowReopen={allowReopen}
-          newTag={newTag}
-          onNewTagChange={setNewTag}
           onClose={() => setSelected(null)}
           onTransition={handleTransition}
-          onAddTag={handleAddTag}
+          onTagsChange={(newTags) => {
+            setSelected((prev) => prev ? { ...prev, tags: newTags } : null)
+          }}
           onDelete={handleDelete}
         />
       )}
@@ -200,22 +190,29 @@ export function DepartmentClient({ materials, orgId, showId, deptId, allowReopen
 function DetailPanel({
   material,
   allowReopen,
-  newTag,
-  onNewTagChange,
   onClose,
   onTransition,
-  onAddTag,
+  onTagsChange,
   onDelete,
 }: {
   material: MaterialWithUrl
   allowReopen: boolean
-  newTag: string
-  onNewTagChange: (v: string) => void
   onClose: () => void
   onTransition: (id: string, target: MaterialState) => void
-  onAddTag: (id: string, tags: string[]) => void
+  onTagsChange: (tags: string[]) => void
   onDelete: (id: string) => void
 }) {
+  const [newTag, setNewTag] = useState('')
+
+  function addTag() {
+    const tag = newTag.trim()
+    if (!tag) return
+    const updated = [...material.tags, tag]
+    onTagsChange(updated)
+    setNewTag('')
+    updateTags(material.id, updated)
+  }
+
   return (
     <aside className="w-80 shrink-0 border-l border-zinc-200 dark:border-zinc-800 p-5 overflow-y-auto bg-white dark:bg-zinc-900">
       <div className="flex items-center justify-between mb-4">
@@ -288,15 +285,13 @@ function DetailPanel({
           <input
             type="text"
             value={newTag}
-            onChange={(e) => onNewTagChange(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') onAddTag(material.id, material.tags)
-            }}
+            onChange={(e) => setNewTag(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') addTag() }}
             placeholder="add tag…"
             className="flex-1 text-xs border border-zinc-200 dark:border-zinc-700 rounded px-2 py-1 bg-transparent text-zinc-900 dark:text-zinc-100"
           />
           <button
-            onClick={() => onAddTag(material.id, material.tags)}
+            onClick={() => addTag()}
             className="text-xs text-indigo-600 dark:text-indigo-400 px-2"
           >
             +
