@@ -27,6 +27,13 @@ export async function createMaterial(
     tags?: string[]
   }
 ): Promise<{ id: string }> {
+  if (type === 'link' && data.url) {
+    const normalized = data.url.trim().toLowerCase()
+    if (normalized.startsWith('javascript:') || normalized.startsWith('data:')) {
+      throw new Error('Invalid URL')
+    }
+  }
+
   const supabase = await createSupabaseServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
@@ -57,6 +64,8 @@ export async function transitionState(
   targetState: MaterialState
 ): Promise<void> {
   const supabase = await createSupabaseServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
 
   const { data: material, error: mErr } = await supabase
     .from('materials')
@@ -104,6 +113,8 @@ export async function updateTags(
 
 export async function deleteMaterial(materialId: string): Promise<void> {
   const supabase = await createSupabaseServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
 
   const { data: material, error: mErr } = await supabase
     .from('materials')
@@ -111,9 +122,6 @@ export async function deleteMaterial(materialId: string): Promise<void> {
     .eq('id', materialId)
     .single()
   if (mErr || !material) throw new Error('Material not found')
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
   if (material.uploaded_by !== user.id) throw new Error('Unauthorized')
 
   if (material.storage_path) {

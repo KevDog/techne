@@ -56,8 +56,13 @@ const mockFromImpl = vi.fn((table: string) => {
   return {}
 })
 
+const mockGetUser = vi.fn().mockResolvedValue({ data: { user: { id: 'user-1' } } })
+
 vi.mock('@/lib/supabase/server', () => ({
-  createSupabaseServerClient: vi.fn().mockResolvedValue({ from: mockFromImpl }),
+  createSupabaseServerClient: vi.fn().mockResolvedValue({
+    from: mockFromImpl,
+    auth: { getUser: mockGetUser },
+  }),
 }))
 
 vi.mock('next/cache', () => ({ revalidatePath: vi.fn() }))

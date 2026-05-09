@@ -369,6 +369,9 @@ function UploadPanel({
     let uploadedPath: string | undefined
     try {
       if ((type === 'image' || type === 'file') && file) {
+        const MAX_BYTES = 50 * 1024 * 1024
+        if (file.size > MAX_BYTES) throw new Error('File exceeds 50 MB limit')
+        if (type === 'image' && !file.type.startsWith('image/')) throw new Error('File is not an image')
         const supabase = createSupabaseBrowserClient()
         const uploadUuid = crypto.randomUUID()
         uploadedPath = `${orgId}/${showId}/${deptId}/${uploadUuid}/${file.name}`

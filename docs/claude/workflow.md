@@ -24,10 +24,11 @@
 7. Ask: can any tasks run in parallel? → `superpowers:dispatching-parallel-agents` skill
 8. Implement (use `superpowers:test-driven-development` skill — tests first)
 9. Verify (use `superpowers:verification-before-completion` skill before claiming done)
-10. Request code review (`superpowers:requesting-code-review` skill)
-11. If ADR-worthy decision made → append to `DECISIONS.md`
-12. Update `LEARNINGS.md` if a new orchestration pattern was used
-13. Close branch (`superpowers:finishing-a-development-branch` skill)
+10. Security review — run `secure-code-review` on all changed files before merge (not just auth/data/API features)
+11. Request code review (`superpowers:requesting-code-review` skill)
+12. If ADR-worthy decision made → append to `DECISIONS.md`
+13. Update `LEARNINGS.md` if a new orchestration pattern was used
+14. Close branch (`superpowers:finishing-a-development-branch` skill)
 
 ## When receiving code review feedback
 
@@ -36,7 +37,3 @@
 ## When hitting a bug
 
 - Use `superpowers:systematic-debugging` skill before proposing any fix
-
-## Before features touching auth, data access, or external APIs
-
-- Run security review (`review-security` skill)
