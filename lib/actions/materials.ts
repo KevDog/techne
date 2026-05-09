@@ -111,7 +111,8 @@ export async function deleteMaterial(materialId: string): Promise<void> {
   if (mErr || !material) throw new Error('Material not found')
 
   const { data: { user } } = await supabase.auth.getUser()
-  if (material.uploaded_by !== user?.id) throw new Error('Unauthorized')
+  if (!user) throw new Error('Unauthorized')
+  if (material.uploaded_by !== user.id) throw new Error('Unauthorized')
 
   if (material.storage_path) {
     await supabase.storage.from('materials').remove([material.storage_path])
