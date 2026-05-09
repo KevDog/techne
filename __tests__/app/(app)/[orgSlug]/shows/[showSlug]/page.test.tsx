@@ -13,8 +13,8 @@ const mockShow: ShowDetail = {
   createdAt: '2026-01-01',
   season: { name: '2025–26 Season', slug: '2025-26' },
   departments: [
-    { id: 'd1', name: 'Scenic Design', created_at: '2026-01-01' },
-    { id: 'd2', name: 'Costume Design', created_at: '2026-01-01' },
+    { id: 'd1', name: 'Scenic Design',  slug: 'scenic-design',  created_at: '2026-01-01' },
+    { id: 'd2', name: 'Costume Design', slug: 'costume-design', created_at: '2026-01-01' },
   ],
   show_members: [
     {
@@ -62,5 +62,15 @@ describe('ShowDetailPage', () => {
     expect(screen.getByText('Antoni Cimolino')).toBeInTheDocument()
     expect(screen.getByText('Director')).toBeInTheDocument()
     expect(screen.getByText('Jane Smith')).toBeInTheDocument()
+  })
+
+  it('renders department links', async () => {
+    const { default: ShowDetailPage } = await import('@/app/(app)/[orgSlug]/shows/[showSlug]/page')
+    const jsx = await ShowDetailPage({
+      params: Promise.resolve({ orgSlug: 'state-u-theater', showSlug: 'hamlet' }),
+    })
+    render(jsx)
+    const link = screen.getByRole('link', { name: 'Scenic Design' })
+    expect(link).toHaveAttribute('href', '/state-u-theater/shows/hamlet/departments/scenic-design')
   })
 })

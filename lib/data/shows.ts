@@ -50,7 +50,7 @@ export const getShowsByOrg = cache(async (org: Org): Promise<ShowWithRelations[]
 })
 
 export type ShowDetail = ShowWithRelations & {
-  departments: { id: string; name: string; created_at: string }[]
+  departments: { id: string; name: string; slug: string; created_at: string }[]
 }
 
 export const getShowBySlug = cache(async (org: Org, slug: string): Promise<ShowDetail | null> => {
@@ -60,7 +60,7 @@ export const getShowBySlug = cache(async (org: Org, slug: string): Promise<ShowD
     .select(`
       id, name, slug, org_id, season_id, approval_mode, allow_reopen, created_at,
       season:seasons ( name, slug ),
-      departments ( id, name, created_at ),
+      departments ( id, name, slug, created_at ),
       show_members ( id, featured, profiles ( display_name ), role_definitions ( name ) )
     `)
     .eq('org_id', org.id)
