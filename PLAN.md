@@ -15,7 +15,7 @@
 
 | Plan | Subsystem | Status | File |
 | --- | --- | --- | --- |
-| 3 | Materials + Annealing workflow | Not started | TBD |
+| 3 | Materials + Annealing workflow | Complete | `docs/plans/2026-05-09-plan-3-materials-annealing.md` |
 | 4 | Notes system | Not started | TBD |
 
 ### Milestone 3: Live Meetings
