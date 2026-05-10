@@ -48,3 +48,4 @@ e2e/.auth/*.json
 # local tooling
 .claude/
 .superpowers/
+.env*.local
