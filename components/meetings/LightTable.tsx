@@ -1,6 +1,8 @@
 'use client'
 
-import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels'
+import { Fragment } from 'react'
+import { Group, Panel, Separator } from 'react-resizable-panels'
+import type { Layout } from 'react-resizable-panels'
 import { MaterialPanel } from '@/components/meetings/MaterialPanel'
 import type { Material } from '@/lib/types/domain'
 
@@ -21,25 +23,27 @@ export function LightTable({ materials, panelSizes, onPanelResize }: Props) {
 
   const defaultSizes = panelSizes.length === materials.length ? panelSizes : undefined
 
+  function handleLayoutChange(layout: Layout) {
+    const sizes = materials.map((mat) => layout[mat.id] ?? 0)
+    onPanelResize(sizes)
+  }
+
   return (
-    <PanelGroup
-      direction="horizontal"
-      onLayout={onPanelResize}
+    <Group
+      orientation="horizontal"
+      onLayoutChange={handleLayoutChange}
       className="h-full"
     >
       {materials.map((mat, i) => (
-        <>
-          <Panel key={mat.id} defaultSize={defaultSizes?.[i]}>
+        <Fragment key={mat.id}>
+          <Panel id={mat.id} defaultSize={defaultSizes?.[i]}>
             <MaterialPanel material={mat} />
           </Panel>
           {i < materials.length - 1 && (
-            <PanelResizeHandle
-              key={`handle-${i}`}
-              className="w-1 bg-neutral-800 hover:bg-blue-600 transition-colors cursor-col-resize"
-            />
+            <Separator className="w-1 bg-neutral-800 hover:bg-blue-600 transition-colors cursor-col-resize" />
           )}
-        </>
+        </Fragment>
       ))}
-    </PanelGroup>
+    </Group>
   )
 }
