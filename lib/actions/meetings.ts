@@ -23,6 +23,20 @@ async function assertCanManageShow(
   if (!permissions.includes('can_manage_show')) throw new Error('Forbidden')
 }
 
+async function assertShowMember(
+  supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
+  showId: string,
+  userId: string
+) {
+  const { data } = await supabase
+    .from('show_members')
+    .select('id')
+    .eq('show_id', showId)
+    .eq('user_id', userId)
+    .maybeSingle()
+  if (!data) throw new Error('Forbidden')
+}
+
 export async function createMeeting(
   showId: string,
   title: string,
@@ -55,6 +69,15 @@ export async function startMeeting(meetingId: string): Promise<void> {
   const supabase = await createSupabaseServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
+
+  const { data: meeting } = await supabase
+    .from('meetings')
+    .select('show_id')
+    .eq('id', meetingId)
+    .single()
+  if (!meeting) throw new Error('Not found')
+
+  await assertShowMember(supabase, meeting.show_id, user.id)
 
   const { error } = await supabase
     .from('meetings')
@@ -124,6 +147,7 @@ export async function hideMeetingNote(noteId: string): Promise<void> {
     .from('notes')
     .update({ hidden_at: new Date().toISOString() })
     .eq('id', noteId)
+    .eq('created_by', user.id)
   if (error) throw new Error('Operation failed')
   revalidatePath('', 'layout')
 }
@@ -139,6 +163,7 @@ export async function restoreMeetingNote(noteId: string): Promise<void> {
     .from('notes')
     .update({ hidden_at: null })
     .eq('id', noteId)
+    .eq('created_by', user.id)
   if (error) throw new Error('Operation failed')
   revalidatePath('', 'layout')
 }

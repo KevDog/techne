@@ -78,6 +78,11 @@ describe('startMeeting', () => {
     vi.resetModules()
     vi.clearAllMocks()
     mockGetUser.mockResolvedValue({ data: { user: { id: TEST_USER_ID } } })
+    // First single(): fetch meeting show_id; second maybeSingle(): show_members check
+    mockSingle
+      .mockResolvedValueOnce({ data: { show_id: TEST_SHOW_ID }, error: null })
+    const mockMaybeSingle = vi.fn().mockResolvedValue({ data: { id: 'member-1' } })
+    mockEq.mockImplementation(() => ({ single: mockSingle, is: mockIs, eq: mockEq, maybeSingle: mockMaybeSingle }))
     mockIs.mockResolvedValue({ error: null })
   })
 

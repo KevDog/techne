@@ -23,6 +23,25 @@ export async function POST(req: Request) {
   })
 
   const { room } = await req.json()
+
+  // Validate room name format and extract showId
+  const match = room.match(/^show-([0-9a-f-]{36})$/)
+  if (!match) {
+    return new Response('Invalid room', { status: 400 })
+  }
+  const showId = match[1]
+
+  // Verify user is a show member
+  const { data: membership } = await supabase
+    .from('show_members')
+    .select('id')
+    .eq('show_id', showId)
+    .eq('user_id', user.id)
+    .maybeSingle()
+  if (!membership) {
+    return new Response('Forbidden', { status: 403 })
+  }
+
   session.allow(room, session.FULL_ACCESS)
 
   const { status, body } = await session.authorize()
