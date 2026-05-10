@@ -34,7 +34,6 @@ type Props = {
   departments: { id: string; name: string }[]
   canManage: boolean
   selfUserId: string
-  selfName: string
 }
 
 function MeetingRoomInner({
