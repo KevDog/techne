@@ -3,39 +3,11 @@
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { assertCanManageShow, assertShowMember } from '@/lib/auth/permissions'
 
 const uuidSchema = z.string().uuid()
 const titleSchema = z.string().min(1).max(200)
 const scheduledAtSchema = z.string().datetime()
-
-async function assertCanManageShow(
-  supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
-  showId: string,
-  userId: string
-) {
-  const { data } = await supabase
-    .from('show_members')
-    .select('role_definitions ( permissions )')
-    .eq('show_id', showId)
-    .eq('user_id', userId)
-    .single()
-  const permissions = (data?.role_definitions as { permissions: string[] } | null)?.permissions ?? []
-  if (!permissions.includes('can_manage_show')) throw new Error('Forbidden')
-}
-
-async function assertShowMember(
-  supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
-  showId: string,
-  userId: string
-) {
-  const { data } = await supabase
-    .from('show_members')
-    .select('id')
-    .eq('show_id', showId)
-    .eq('user_id', userId)
-    .maybeSingle()
-  if (!data) throw new Error('Forbidden')
-}
 
 export async function createMeeting(
   showId: string,
