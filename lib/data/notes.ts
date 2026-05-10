@@ -70,3 +70,17 @@ export const getNotesByShow = cache(
     return rows.map((r) => mapRow(r, nameMap))
   }
 )
+
+export const getNotesByMeeting = cache(
+  async (meetingId: string): Promise<NoteWithAuthors[]> => {
+    const supabase = await createSupabaseServerClient()
+    const { data: rows, error } = await supabase
+      .from('notes')
+      .select(NOTE_SELECT)
+      .eq('meeting_id', meetingId)
+      .order('created_at', { ascending: true })
+    if (error || !rows || rows.length === 0) return []
+    const nameMap = await hydrateAuthors(supabase, rows)
+    return rows.map((r) => mapRow(r, nameMap))
+  }
+)

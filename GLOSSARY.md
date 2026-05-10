@@ -113,6 +113,12 @@ The member currently driving navigation in a live meeting. Any member can claim 
 **Browse Mode**
 The default live meeting state where each member navigates independently while seeing others' presence.
 
+**Light Table**
+The main material viewing area in meeting mode. Displays 1–4 materials simultaneously in a resizable grid. Named after the physical light tables used in theatrical design to compare renderings and transparencies.
+
+**Follow Mode**
+A live meeting state where a member has chosen to mirror the presenter's light table — same materials, filters, and panel sizes update in real time.
+
 ---
 
 ## Technical Terms

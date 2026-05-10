@@ -52,6 +52,11 @@ export default async function ShowDetailPage({ params }: Props) {
             .filter(Boolean)
             .join(' · ')}
         </p>
+        <nav className="flex items-center gap-6 mt-4 border-t border-zinc-200 dark:border-zinc-800 pt-4">
+          <Link href={`/${orgSlug}/shows/${showSlug}/meetings`} className="text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100">
+            Meetings
+          </Link>
+        </nav>
       </div>
 
       {/* Two-column body */}

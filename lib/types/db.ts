@@ -329,6 +329,39 @@ export type Database = {
           // meeting_id has no FK in Plan 4 — meetings table added in Plan 5
         ]
       }
+      meetings: {
+        Row: {
+          id: string
+          show_id: string
+          title: string
+          scheduled_at: string
+          started_at: string | null
+          ended_at: string | null
+          created_by: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          show_id: string
+          title: string
+          scheduled_at: string
+          started_at?: string | null
+          ended_at?: string | null
+          created_by: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          show_id?: string
+          title?: string
+          scheduled_at?: string
+          started_at?: string | null
+          ended_at?: string | null
+          created_by?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
       role_definitions: {
         Row: {
           id: string
