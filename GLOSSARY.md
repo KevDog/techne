@@ -61,6 +61,19 @@ External content (link, image, video) collected as inspiration or research.
 
 ---
 
+## Notes
+
+**Note (commentary)**
+Markdown-formatted commentary attached to a material or show. Distinct from the `note` material type (which is a design artifact in the annealing lifecycle). Notes are editable by any org member, support tags, and are soft-deleted via `hidden_at` rather than hard-deleted.
+
+**Hidden Note**
+A note where `hidden_at` is non-null. Hidden notes are preserved in the database for design history but collapsed in the UI by default. Any org member can hide or restore a note.
+
+**Soft Delete**
+The pattern of marking a record invisible by setting a `hidden_at` timestamp rather than deleting the row. Used for notes to preserve design history. There is no DELETE RLS policy on the `notes` table.
+
+---
+
 ## Workflow & Lifecycle
 
 **Annealing Model**

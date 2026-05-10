@@ -32,6 +32,11 @@ const mockShow: ShowDetail = {
 
 vi.mock('@/lib/data/orgs', () => ({ getOrgBySlug: vi.fn().mockResolvedValue(org) }))
 vi.mock('@/lib/data/shows', () => ({ getShowBySlug: vi.fn().mockResolvedValue(mockShow) }))
+vi.mock('@/lib/data/notes', () => ({ getNotesByShow: vi.fn().mockResolvedValue([]) }))
+vi.mock(
+  '@/app/(app)/[orgSlug]/shows/[showSlug]/ShowNotesSection',
+  () => ({ ShowNotesSection: () => <div data-testid="show-notes" /> })
+)
 
 describe('ShowDetailPage', () => {
   it('renders show name', async () => {
@@ -72,5 +77,14 @@ describe('ShowDetailPage', () => {
     render(jsx)
     const link = screen.getByRole('link', { name: 'Scenic Design' })
     expect(link).toHaveAttribute('href', '/state-u-theater/shows/hamlet/departments/scenic-design')
+  })
+
+  it('renders ShowNotesSection', async () => {
+    const { default: ShowDetailPage } = await import('@/app/(app)/[orgSlug]/shows/[showSlug]/page')
+    const jsx = await ShowDetailPage({
+      params: Promise.resolve({ orgSlug: 'state-u-theater', showSlug: 'hamlet' }),
+    })
+    render(jsx)
+    expect(screen.getByTestId('show-notes')).toBeInTheDocument()
   })
 })

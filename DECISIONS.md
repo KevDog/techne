@@ -139,3 +139,27 @@ There is no standard organizational structure in theater. A university productio
 **Decision:** The Supabase auth callback handler lives at `app/auth/callback/route.ts` (real directory), not inside `app/(auth)/` (route group).
 
 **Rationale:** Next.js route groups (parenthesized folders) are organizational only — they do not add segments to the URL. `app/(auth)/callback/route.ts` resolves to `/callback`, not `/auth/callback`. Since `signInWithOtp` redirects to `/auth/callback`, the handler must be in a real `auth/` directory.
+
+---
+
+## ADR-012: Polymorphic Note Attachment via Nullable FKs + CHECK Constraint
+
+**Date:** 2026-05-09
+**Status:** Accepted
+
+**Decision:** A single `notes` table holds all note types (material, show, meeting). Each attachment target is a nullable FK column. A `CHECK (num_nonnulls(material_id, show_id, meeting_id) = 1)` constraint enforces exactly one attachment per note.
+
+**Rationale:** Separate tables per note type (material_notes, show_notes, meeting_notes) would require duplicating the schema, RLS policies, and data layer for every new attachment target. The polymorphic single-table approach adds each new target as a column + index + RLS branch, which is tractable at our entity count. The CHECK constraint enforces the invariant at the DB level so the application layer cannot accidentally create orphaned or multi-attached notes.
+
+**Trade-off:** RLS policies must enumerate all attachment paths (`material_id IS NOT NULL AND ...` OR `show_id IS NOT NULL AND ...`). Adding `meeting_id` in Plan 5 requires extending all three policies.
+
+---
+
+## ADR-013: Hide/Restore Operations Do Not Update Attribution Fields
+
+**Date:** 2026-05-09
+**Status:** Accepted
+
+**Decision:** `hideNote` and `restoreNote` update only `hidden_at`. They do not set `updated_by` or `updated_at`.
+
+**Rationale:** The "last edited by" attribution on a note reflects who last changed its content (body or tags). Soft-delete visibility is an administrative action, not a content edit. Updating `updated_by` on hide/restore would make it appear that the hider "edited" the note, polluting the attribution trail. The trade-off is that the RLS UPDATE `with check` cannot enforce `updated_by = auth.uid()` (since hide/restore don't set that field), so column-scope is enforced at the application layer instead.

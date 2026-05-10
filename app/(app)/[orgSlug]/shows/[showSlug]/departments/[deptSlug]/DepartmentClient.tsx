@@ -5,10 +5,12 @@ import Image from 'next/image'
 import { createMaterial, transitionState, updateTags, deleteMaterial } from '@/lib/actions/materials'
 import { createSupabaseBrowserClient } from '@/lib/supabase/client'
 import type { MaterialWithUrl } from '@/lib/data/materials'
-import type { MaterialType, MaterialState } from '@/lib/types/domain'
+import type { MaterialType, MaterialState, NoteWithAuthors } from '@/lib/types/domain'
+import { NoteList } from '@/components/NoteList'
 
 type Props = {
   materials: MaterialWithUrl[]
+  notesByMaterial: Record<string, NoteWithAuthors[]>
   orgId: string
   showId: string
   deptId: string
@@ -39,7 +41,7 @@ function StateBadge({ state }: { state: MaterialState }) {
   )
 }
 
-export function DepartmentClient({ materials, orgId, showId, deptId, allowReopen }: Props) {
+export function DepartmentClient({ materials, notesByMaterial, orgId, showId, deptId, allowReopen }: Props) {
   const [activeTab, setActiveTab] = useState<TabFilter>('all')
   const [selected, setSelected] = useState<MaterialWithUrl | null>(null)
   const [uploadOpen, setUploadOpen] = useState(false)
@@ -162,6 +164,7 @@ export function DepartmentClient({ materials, orgId, showId, deptId, allowReopen
       {selected && (
         <DetailPanel
           material={selected}
+          notes={notesByMaterial[selected.id] ?? []}
           allowReopen={allowReopen}
           onClose={() => setSelected(null)}
           onTransition={handleTransition}
@@ -189,6 +192,7 @@ export function DepartmentClient({ materials, orgId, showId, deptId, allowReopen
 
 function DetailPanel({
   material,
+  notes,
   allowReopen,
   onClose,
   onTransition,
@@ -196,6 +200,7 @@ function DetailPanel({
   onDelete,
 }: {
   material: MaterialWithUrl
+  notes: NoteWithAuthors[]
   allowReopen: boolean
   onClose: () => void
   onTransition: (id: string, target: MaterialState) => void
@@ -297,6 +302,12 @@ function DetailPanel({
             +
           </button>
         </div>
+      </div>
+
+      {/* Notes */}
+      <div className="border-t border-zinc-200 dark:border-zinc-800 mt-4 pt-4">
+        <p className="text-xs font-medium uppercase tracking-widest text-zinc-500 mb-3">Notes</p>
+        <NoteList notes={notes} attachment={{ materialId: material.id }} />
       </div>
 
       {/* State transitions */}
