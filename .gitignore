@@ -42,6 +42,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# playwright auth state
+e2e/.auth/*.json
+
 # local tooling
 .claude/
 .superpowers/
