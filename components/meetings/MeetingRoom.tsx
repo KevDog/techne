@@ -113,7 +113,7 @@ function MeetingRoomInner({
 
   const prevOtherIds = useRef<Set<string>>(new Set())
   useEffect(() => {
-    const currentIds = new Set(others.map((o) => o.id))
+    const currentIds = new Set(others.map((o) => o.id as string))
     for (const id of prevOtherIds.current) {
       if (!currentIds.has(id) && isOldest) {
         cleanupPresenter(id)
@@ -150,8 +150,8 @@ function MeetingRoomInner({
 
   // Presence bar data
   const allMembers = [
-    ...(self ? [{ userId: self.id, presence: self.presence, info: self.info }] : []),
-    ...others.map((o) => ({ userId: o.id, presence: o.presence, info: o.info })),
+    ...(self ? [{ userId: self.id as string, presence: self.presence, info: self.info }] : []),
+    ...others.map((o) => ({ userId: o.id as string, presence: o.presence, info: o.info })),
   ]
   const presenceBarMembers = allMembers.map((m) => ({
     userId: m.userId,

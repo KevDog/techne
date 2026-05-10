@@ -33,7 +33,7 @@ export async function POST(req: Request) {
   if (!match) {
     return new Response('Invalid room', { status: 400 })
   }
-  const showId = match[1]
+  const showId = match[1]!
 
   // Verify user is a show member
   const { data: membership } = await supabase
