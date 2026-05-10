@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getOrgBySlug } from '@/lib/data/orgs'
 import { getShowBySlug } from '@/lib/data/shows'
+import { getNotesByShow } from '@/lib/data/notes'
+import { ShowNotesSection } from './ShowNotesSection'
 
 type Props = {
   params: Promise<{ orgSlug: string; showSlug: string }>
@@ -24,6 +26,8 @@ export default async function ShowDetailPage({ params }: Props) {
 
   const show = await getShowBySlug(org, showSlug)
   if (!show) notFound()
+
+  const showNotes = await getNotesByShow(show.id)
 
   const featuredMember = show.show_members.find((m) => m.featured)
 
@@ -91,6 +95,7 @@ export default async function ShowDetailPage({ params }: Props) {
           </ul>
         </main>
       </div>
+      <ShowNotesSection notes={showNotes} showId={show.id} />
     </div>
   )
 }
