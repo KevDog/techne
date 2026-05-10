@@ -1,66 +1,53 @@
-// Liveblocks v3 config
-// v3 keeps createClient (from @liveblocks/client) + createRoomContext (from @liveblocks/react).
-// The v2 → v3 change was internal; the public surface used here is unchanged.
-
-import { createClient, LiveObject, LiveList } from '@liveblocks/client'
+import { createClient } from '@liveblocks/client'
 import { createRoomContext } from '@liveblocks/react'
-import type { Note } from '@/lib/types/domain'
-
-// ─── Presence ────────────────────────────────────────────────────────────────
-
-export type LBPresence = {
-  cursor: { x: number; y: number } | null
-  activeNoteId: string | null
-}
-
-// ─── Storage ─────────────────────────────────────────────────────────────────
+import type { MaterialState } from '@/lib/types/domain'
 
 export type LBFilters = {
+  department_ids: string[]
   tags: string[]
-  authorId: string | null
+  states: MaterialState[]
 }
 
 export type LBStorage = {
-  notes: LiveList<LiveObject<Note>>
-  filters: LiveObject<LBFilters>
+  presenter_id: string | null
+  presenter_request: { from_user_id: string; requested_at: number } | null
+  active_meeting_id: string | null
+  active_material_ids: string[]
+  panel_sizes: number[]
+  filters: LBFilters
 }
 
-// ─── User meta ───────────────────────────────────────────────────────────────
+export type LBPresence = {
+  user_id: string
+  current_material_id: string | null
+  mode: 'browse' | 'follow'
+  joined_at: number
+}
 
 export type LBUserMeta = {
-  id: string
-  info: {
-    name: string
-    initials: string
-  }
+  info: { name: string; initials: string }
 }
 
-// ─── Room events ─────────────────────────────────────────────────────────────
-
-export type LBRoomEvent =
-  | { type: 'NOTE_CREATED'; noteId: string }
-  | { type: 'NOTE_DELETED'; noteId: string }
-  | { type: 'MEETING_ENDED' }
-
-// ─── Constants ───────────────────────────────────────────────────────────────
+export type LBRoomEvent = { type: 'navigate'; material_id: string }
 
 export const EMPTY_FILTERS: LBFilters = {
+  department_ids: [],
   tags: [],
-  authorId: null,
+  states: [],
 }
 
-export const INITIAL_STORAGE = (): LBStorage => ({
-  notes: new LiveList([]),
-  filters: new LiveObject(EMPTY_FILTERS),
-})
+export const INITIAL_STORAGE: LBStorage = {
+  presenter_id: null,
+  presenter_request: null,
+  active_meeting_id: null,
+  active_material_ids: [],
+  panel_sizes: [],
+  filters: EMPTY_FILTERS,
+}
 
-// ─── Client + context ────────────────────────────────────────────────────────
+const client = createClient({ authEndpoint: '/api/liveblocks-auth' })
 
-const client = createClient({
-  authEndpoint: '/api/liveblocks-auth',
-})
-
-const {
+export const {
   RoomProvider,
   useStorage,
   useMutation,
@@ -70,14 +57,3 @@ const {
   useEventListener,
   useUpdateMyPresence,
 } = createRoomContext<LBPresence, LBStorage, LBUserMeta, LBRoomEvent>(client)
-
-export {
-  RoomProvider,
-  useStorage,
-  useMutation,
-  useOthers,
-  useSelf,
-  useBroadcastEvent,
-  useEventListener,
-  useUpdateMyPresence,
-}
