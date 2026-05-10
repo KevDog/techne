@@ -6,7 +6,7 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client'
 
 function LoginError() {
   const params = useSearchParams()
-  const error = params.get('error')
+  const error = params?.get('error')
   if (!error) return null
   return (
     <p role="alert" className="text-red-400 text-sm">
