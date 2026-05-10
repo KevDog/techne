@@ -110,3 +110,16 @@ export type NoteWithAuthors = Note & {
   createdByName: string
   updatedByName: string
 }
+
+export type Meeting = {
+  id: string
+  showId: string
+  title: string
+  scheduledAt: string
+  startedAt: string | null
+  endedAt: string | null
+  createdBy: string
+  createdAt: string
+}
+
+export type MeetingNote = Note
