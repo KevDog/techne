@@ -5,6 +5,7 @@ import { getShowBySlug } from '@/lib/data/shows'
 import { getDepartmentBySlug } from '@/lib/data/departments'
 import { getMaterialsByDepartment } from '@/lib/data/materials'
 import { getNotesByMaterial } from '@/lib/data/notes'
+import type { NoteWithAuthors } from '@/lib/types/domain'
 import { DepartmentClient } from './DepartmentClient'
 
 type Props = {
@@ -25,7 +26,7 @@ export default async function DepartmentPage({ params }: Props) {
 
   const materials = await getMaterialsByDepartment(dept)
 
-  const notesByMaterial: Record<string, import('@/lib/types/domain').NoteWithAuthors[]> =
+  const notesByMaterial: Record<string, NoteWithAuthors[]> =
     Object.fromEntries(
       await Promise.all(
         materials.map(async (m) => [m.id, await getNotesByMaterial(m.id)] as const)
