@@ -16,7 +16,7 @@
 | Plan | Subsystem | Status | File |
 | --- | --- | --- | --- |
 | 3 | Materials + Annealing workflow | Complete | `docs/plans/2026-05-09-plan-3-materials-annealing.md` |
-| 4 | Notes system | Not started | TBD |
+| 4 | Notes system | Complete | `docs/plans/2026-05-09-plan-4-notes.md` |
 
 ### Milestone 3: Live Meetings
 > Teams can conduct live "follow the leader" design meetings.
