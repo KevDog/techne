@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 
-type Attachment = { materialId: string } | { showId: string }
+export type Attachment = { materialId: string } | { showId: string }
 
 export async function createNote(
   attachment: Attachment,

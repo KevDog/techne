@@ -3,9 +3,8 @@
 import { useState, useTransition } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { createNote, updateNote, hideNote, restoreNote } from '@/lib/actions/notes'
+import type { Attachment } from '@/lib/actions/notes'
 import type { NoteWithAuthors } from '@/lib/types/domain'
-
-type Attachment = { materialId: string } | { showId: string }
 
 type Props = {
   notes: NoteWithAuthors[]
@@ -19,7 +18,7 @@ export function NoteList({ notes, attachment }: Props) {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editBody, setEditBody] = useState('')
   const [editTags, setEditTags] = useState('')
-  const [, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition()
 
   const hiddenCount = notes.filter((n) => n.hiddenAt).length
   const visibleNotes = showHidden ? notes : notes.filter((n) => !n.hiddenAt)
@@ -97,6 +96,7 @@ export function NoteList({ notes, attachment }: Props) {
             onCancelEdit={() => setEditingId(null)}
             onHide={() => handleHide(note.id)}
             onRestore={() => handleRestore(note.id)}
+            isPending={isPending}
           />
         ))}
       </div>
@@ -118,7 +118,7 @@ function NoteItem({
   note, isEditing, editBody, editTags,
   onEditBodyChange, onEditTagsChange,
   onStartEdit, onSaveEdit, onCancelEdit,
-  onHide, onRestore,
+  onHide, onRestore, isPending,
 }: {
   note: NoteWithAuthors
   isEditing: boolean
@@ -131,6 +131,7 @@ function NoteItem({
   onCancelEdit: () => void
   onHide: () => void
   onRestore: () => void
+  isPending: boolean
 }) {
   const isHidden = !!note.hiddenAt
   const wasEdited = note.updatedAt !== note.createdAt
@@ -208,7 +209,8 @@ function NoteItem({
                 <button
                   type="button"
                   onClick={onRestore}
-                  className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+                  disabled={isPending}
+                  className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 disabled:opacity-40"
                 >
                   Restore
                 </button>
@@ -217,14 +219,16 @@ function NoteItem({
                   <button
                     type="button"
                     onClick={onStartEdit}
-                    className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+                    disabled={isPending}
+                    className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 disabled:opacity-40"
                   >
                     Edit
                   </button>
                   <button
                     type="button"
                     onClick={onHide}
-                    className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+                    disabled={isPending}
+                    className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 disabled:opacity-40"
                   >
                     Hide
                   </button>
