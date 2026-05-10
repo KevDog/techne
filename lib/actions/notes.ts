@@ -2,6 +2,9 @@
 
 import { revalidatePath } from 'next/cache'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
+import type { Database } from '@/lib/types/db'
+
+type NotesInsert = Database['public']['Tables']['notes']['Insert']
 
 export type Attachment = { materialId: string } | { showId: string }
 
@@ -13,14 +16,13 @@ export async function createNote(
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
-  const insert = {
+  const insert: NotesInsert = {
     body: data.body,
     tags: data.tags ?? [],
     created_by: user.id,
     updated_by: user.id,
-    ...('materialId' in attachment
-      ? { material_id: attachment.materialId }
-      : { show_id: attachment.showId }),
+    material_id: 'materialId' in attachment ? attachment.materialId : undefined,
+    show_id: 'showId' in attachment ? attachment.showId : undefined,
   }
 
   const { data: row, error } = await supabase

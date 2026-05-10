@@ -77,7 +77,7 @@ describe('getNotesByMaterial', () => {
     mockIn.mockResolvedValue({ data: [{ id: 'user-1', display_name: 'Sarah M' }], error: null })
     const { getNotesByMaterial } = await import('@/lib/data/notes')
     const result = await getNotesByMaterial('mat-1')
-    expect(result[0].hiddenAt).toBe('2026-05-09T12:00:00Z')
+    expect(result[0]!.hiddenAt).toBe('2026-05-09T12:00:00Z')
   })
 
   it('falls back to Unknown for missing profile', async () => {
@@ -85,7 +85,7 @@ describe('getNotesByMaterial', () => {
     mockIn.mockResolvedValue({ data: [], error: null })
     const { getNotesByMaterial } = await import('@/lib/data/notes')
     const result = await getNotesByMaterial('mat-1')
-    expect(result[0].createdByName).toBe('Unknown')
+    expect(result[0]!.createdByName).toBe('Unknown')
   })
 })
 
@@ -106,7 +106,7 @@ describe('getNotesByShow', () => {
   it('filters by show_id', async () => {
     const { getNotesByShow } = await import('@/lib/data/notes')
     const result = await getNotesByShow('show-1')
-    expect(result[0].showId).toBe('show-1')
+    expect(result[0]!.showId).toBe('show-1')
     expect(mockEq).toHaveBeenCalledWith('show_id', 'show-1')
   })
 })

@@ -103,7 +103,7 @@ describe('hideNote', () => {
   it('does not update updated_by or updated_at', async () => {
     const { hideNote } = await import('@/lib/actions/notes')
     await hideNote('note-1')
-    const call = mockUpdate.mock.calls[0]?.[0] as Record<string, unknown> | undefined
+    const call = (mockUpdate.mock.calls as unknown[][])[0]?.[0] as Record<string, unknown> | undefined
     expect(call).not.toHaveProperty('updated_by')
     expect(call).not.toHaveProperty('updated_at')
   })
