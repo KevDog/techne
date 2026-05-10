@@ -16,41 +16,37 @@ create index meetings_created_by_idx on public.meetings(created_by);
 
 alter table public.meetings enable row level security;
 
-create policy "org members can select meetings"
+create policy "show members can select meetings"
   on public.meetings for select
   using (
     exists (
-      select 1 from public.shows s
-      join public.org_members om on om.org_id = s.org_id
-      where s.id = meetings.show_id and om.user_id = auth.uid()
+      select 1 from public.show_members sm
+      where sm.show_id = meetings.show_id and sm.user_id = auth.uid()
     )
   );
 
-create policy "org members can insert meetings"
+create policy "show members can insert meetings"
   on public.meetings for insert
   with check (
     created_by = auth.uid()
     and exists (
-      select 1 from public.shows s
-      join public.org_members om on om.org_id = s.org_id
-      where s.id = meetings.show_id and om.user_id = auth.uid()
+      select 1 from public.show_members sm
+      where sm.show_id = meetings.show_id and sm.user_id = auth.uid()
     )
   );
 
-create policy "org members can update meetings"
+create policy "show members can update meetings"
   on public.meetings for update
   using (
     exists (
-      select 1 from public.shows s
-      join public.org_members om on om.org_id = s.org_id
-      where s.id = meetings.show_id and om.user_id = auth.uid()
+      select 1 from public.show_members sm
+      where sm.show_id = meetings.show_id and sm.user_id = auth.uid()
     )
   )
   with check (
     exists (
-      select 1 from public.shows s
-      join public.org_members om on om.org_id = s.org_id
-      where s.id = meetings.show_id and om.user_id = auth.uid()
+      select 1 from public.show_members sm
+      where sm.show_id = meetings.show_id and sm.user_id = auth.uid()
     )
   );
 

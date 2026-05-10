@@ -24,6 +24,10 @@ export async function POST(req: Request) {
 
   const { room } = await req.json()
 
+  if (!room || typeof room !== 'string') {
+    return new Response('Bad Request', { status: 400 })
+  }
+
   // Validate room name format and extract showId
   const match = room.match(/^show-([0-9a-f-]{36})$/)
   if (!match) {
