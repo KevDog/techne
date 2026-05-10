@@ -13,16 +13,14 @@ export async function createNote(
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
-  const insert: Record<string, unknown> = {
+  const insert = {
     body: data.body,
     tags: data.tags ?? [],
     created_by: user.id,
     updated_by: user.id,
-  }
-  if ('materialId' in attachment) {
-    insert.material_id = attachment.materialId
-  } else {
-    insert.show_id = attachment.showId
+    ...('materialId' in attachment
+      ? { material_id: attachment.materialId }
+      : { show_id: attachment.showId }),
   }
 
   const { data: row, error } = await supabase

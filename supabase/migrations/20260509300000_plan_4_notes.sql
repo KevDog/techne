@@ -87,22 +87,19 @@ create policy "org members can update notes"
     ))
   )
   with check (
-    updated_by = auth.uid()
-    and (
-      (material_id is not null and exists (
-        select 1 from public.materials mat
-        join public.departments d on d.id = mat.department_id
-        join public.shows s on s.id = d.show_id
-        join public.org_members om on om.org_id = s.org_id
-        where mat.id = notes.material_id
-          and om.user_id = auth.uid()
-      ))
-      or
-      (show_id is not null and exists (
-        select 1 from public.shows s
-        join public.org_members om on om.org_id = s.org_id
-        where s.id = notes.show_id
-          and om.user_id = auth.uid()
-      ))
-    )
+    (material_id is not null and exists (
+      select 1 from public.materials mat
+      join public.departments d on d.id = mat.department_id
+      join public.shows s on s.id = d.show_id
+      join public.org_members om on om.org_id = s.org_id
+      where mat.id = notes.material_id
+        and om.user_id = auth.uid()
+    ))
+    or
+    (show_id is not null and exists (
+      select 1 from public.shows s
+      join public.org_members om on om.org_id = s.org_id
+      where s.id = notes.show_id
+        and om.user_id = auth.uid()
+    ))
   );
