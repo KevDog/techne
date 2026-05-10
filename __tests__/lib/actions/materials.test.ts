@@ -4,32 +4,32 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 describe('isValidTransition', () => {
   it('exploratory → proposed: allowed', async () => {
-    const { isValidTransition } = await import('@/lib/actions/materials')
+    const { isValidTransition } = await import('@/lib/utils/material-transitions')
     expect(isValidTransition('exploratory', 'proposed', false)).toBe(true)
   })
 
   it('proposed → decided: allowed', async () => {
-    const { isValidTransition } = await import('@/lib/actions/materials')
+    const { isValidTransition } = await import('@/lib/utils/material-transitions')
     expect(isValidTransition('proposed', 'decided', false)).toBe(true)
   })
 
   it('decided → proposed with allowReopen=true: allowed', async () => {
-    const { isValidTransition } = await import('@/lib/actions/materials')
+    const { isValidTransition } = await import('@/lib/utils/material-transitions')
     expect(isValidTransition('decided', 'proposed', true)).toBe(true)
   })
 
   it('decided → proposed with allowReopen=false: blocked', async () => {
-    const { isValidTransition } = await import('@/lib/actions/materials')
+    const { isValidTransition } = await import('@/lib/utils/material-transitions')
     expect(isValidTransition('decided', 'proposed', false)).toBe(false)
   })
 
   it('proposed → exploratory: never allowed', async () => {
-    const { isValidTransition } = await import('@/lib/actions/materials')
+    const { isValidTransition } = await import('@/lib/utils/material-transitions')
     expect(isValidTransition('proposed', 'exploratory', true)).toBe(false)
   })
 
   it('exploratory → decided: never allowed', async () => {
-    const { isValidTransition } = await import('@/lib/actions/materials')
+    const { isValidTransition } = await import('@/lib/utils/material-transitions')
     expect(isValidTransition('exploratory', 'decided', false)).toBe(false)
   })
 })
