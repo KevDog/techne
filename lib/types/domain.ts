@@ -91,3 +91,22 @@ export type Material = {
   tags: string[]
   createdAt: string
 }
+
+export type Note = {
+  id: string
+  body: string
+  tags: string[]
+  createdBy: string
+  updatedBy: string
+  createdAt: string
+  updatedAt: string
+  hiddenAt: string | null
+  materialId: string | null
+  showId: string | null
+  meetingId: string | null
+}
+
+export type NoteWithAuthors = Note & {
+  createdByName: string
+  updatedByName: string
+}
