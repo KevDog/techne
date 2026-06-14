@@ -2719,7 +2719,7 @@ git commit -m "feat: add meeting list page and meeting room page"
 
 ## Task 15: Final wiring + smoke test
 
-- [ ] **Step 1: Add link to meetings from the show detail page**
+- [x] **Step 1: Add link to meetings from the show detail page**
 
 In the show detail page (find it under `app/(app)/[orgSlug]/shows/[showSlug]/page.tsx`), add a link:
 
@@ -2729,7 +2729,7 @@ In the show detail page (find it under `app/(app)/[orgSlug]/shows/[showSlug]/pag
 </a>
 ```
 
-- [ ] **Step 2: Start dev server and manually test the golden path**
+- [x] **Step 2: Start dev server and manually test the golden path**
 
 ```bash
 npm run dev
@@ -2749,14 +2749,14 @@ Walk through:
 11. Add a meeting note → it appears in the drawer
 12. End meeting (can_manage_show only) → banner appears for all connected members
 
-- [ ] **Step 3: Commit any fixes from smoke test**
+- [x] **Step 3: Commit any fixes from smoke test**
 
 ```bash
 git add -A
 git commit -m "fix: smoke test corrections for meeting mode"
 ```
 
-- [ ] **Step 4: Run full test suite one final time**
+- [x] **Step 4: Run full test suite one final time**
 
 ```bash
 npx vitest run
