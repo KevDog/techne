@@ -83,7 +83,7 @@ git commit -m "chore: install liveblocks and react-resizable-panels"
 **Files:**
 - Create: `supabase/migrations/20260509400000_plan_5_meetings.sql`
 
-- [ ] **Step 1: Write the migration**
+- [x] **Step 1: Write the migration**
 
 ```sql
 -- supabase/migrations/20260509400000_plan_5_meetings.sql
@@ -245,7 +245,7 @@ create policy "org members can update notes"
   );
 ```
 
-- [ ] **Step 2: Apply the migration**
+- [x] **Step 2: Apply the migration**
 
 ```bash
 npx supabase db push
@@ -253,7 +253,7 @@ npx supabase db push
 
 Expected: migration applied with no errors.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add supabase/migrations/20260509400000_plan_5_meetings.sql
