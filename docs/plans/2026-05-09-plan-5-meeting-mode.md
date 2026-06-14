@@ -53,7 +53,7 @@
 
 ## Task 1: Install dependencies
 
-- [ ] **Step 1: Install runtime packages**
+- [x] **Step 1: Install runtime packages**
 
 ```bash
 npm install @liveblocks/client @liveblocks/react @liveblocks/node react-resizable-panels
@@ -61,7 +61,7 @@ npm install @liveblocks/client @liveblocks/react @liveblocks/node react-resizabl
 
 Expected: packages added to `node_modules` and `package.json`.
 
-- [ ] **Step 2: Add `LIVEBLOCKS_SECRET_KEY` to `.env.local`**
+- [x] **Step 2: Add `LIVEBLOCKS_SECRET_KEY` to `.env.local`**
 
 ```
 LIVEBLOCKS_SECRET_KEY=sk_dev_your_key_here
@@ -69,7 +69,7 @@ LIVEBLOCKS_SECRET_KEY=sk_dev_your_key_here
 
 Get the key from the Liveblocks dashboard → Settings → API Keys.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add package.json package-lock.json
