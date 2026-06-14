@@ -2505,7 +2505,7 @@ git commit -m "feat: add MeetingRoom root component with Liveblocks integration"
 - Create: `app/(app)/[orgSlug]/shows/[showSlug]/meetings/page.tsx`
 - Create: `app/(app)/[orgSlug]/shows/[showSlug]/meetings/[meetingId]/page.tsx`
 
-- [ ] **Step 1: Implement meeting list page**
+- [x] **Step 1: Implement meeting list page**
 
 ```tsx
 // app/(app)/[orgSlug]/shows/[showSlug]/meetings/page.tsx
@@ -2604,7 +2604,7 @@ export default async function MeetingsPage({ params }: Props) {
 }
 ```
 
-- [ ] **Step 2: Implement meeting room page**
+- [x] **Step 2: Implement meeting room page**
 
 ```tsx
 // app/(app)/[orgSlug]/shows/[showSlug]/meetings/[meetingId]/page.tsx
@@ -2669,7 +2669,7 @@ export default async function MeetingRoomPage({ params }: Props) {
 }
 ```
 
-- [ ] **Step 3: Check that `getMaterialsByShow` exists in `lib/data/materials.ts`. If it does not, add it:**
+- [x] **Step 3: Check that `getMaterialsByShow` exists in `lib/data/materials.ts`. If it does not, add it:**
 
 ```ts
 export const getMaterialsByShow = cache(async (showId: string): Promise<Material[]> => {
@@ -2700,7 +2700,7 @@ export const getMaterialsByShow = cache(async (showId: string): Promise<Material
 })
 ```
 
-- [ ] **Step 4: Run full test suite — expect PASS**
+- [x] **Step 4: Run full test suite — expect PASS**
 
 ```bash
 npx vitest run
@@ -2708,7 +2708,7 @@ npx vitest run
 
 Expected: all tests pass. Investigate and fix any failures before continuing.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/\(app\)/\[orgSlug\]/shows/\[showSlug\]/meetings/
