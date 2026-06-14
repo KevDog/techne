@@ -992,7 +992,7 @@ git commit -m "feat: add meetings data layer and getNotesByMeeting"
 - Create: `lib/actions/meetings.ts`
 - Create: `__tests__/lib/actions/meetings.test.ts`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```ts
 // __tests__/lib/actions/meetings.test.ts
@@ -1105,13 +1105,13 @@ describe('addMeetingNote', () => {
 })
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/lib/actions/meetings.test.ts
 ```
 
-- [ ] **Step 3: Implement `lib/actions/meetings.ts`**
+- [x] **Step 3: Implement `lib/actions/meetings.ts`**
 
 ```ts
 'use server'
@@ -1260,13 +1260,13 @@ export async function restoreMeetingNote(noteId: string): Promise<void> {
 }
 ```
 
-- [ ] **Step 4: Run tests — expect PASS**
+- [x] **Step 4: Run tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/lib/actions/meetings.test.ts
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/actions/meetings.ts __tests__/lib/actions/meetings.test.ts
