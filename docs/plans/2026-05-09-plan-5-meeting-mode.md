@@ -832,7 +832,7 @@ git commit -m "feat: add Liveblocks storage mutation helpers with tests"
 - Modify: `lib/data/notes.ts`
 - Create: `__tests__/lib/data/meetings.test.ts`
 
-- [ ] **Step 1: Write failing tests for meetings data**
+- [x] **Step 1: Write failing tests for meetings data**
 
 ```ts
 // __tests__/lib/data/meetings.test.ts
@@ -895,13 +895,13 @@ describe('getMeetingById', () => {
 })
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/lib/data/meetings.test.ts
 ```
 
-- [ ] **Step 3: Implement `lib/data/meetings.ts`**
+- [x] **Step 3: Implement `lib/data/meetings.ts`**
 
 ```ts
 import { cache } from 'react'
@@ -951,7 +951,7 @@ export const getMeetingById = cache(async (meetingId: string): Promise<Meeting |
 })
 ```
 
-- [ ] **Step 4: Add `getNotesByMeeting` to `lib/data/notes.ts`**
+- [x] **Step 4: Add `getNotesByMeeting` to `lib/data/notes.ts`**
 
 Append after `getNotesByShow`:
 
@@ -971,13 +971,13 @@ export const getNotesByMeeting = cache(
 )
 ```
 
-- [ ] **Step 5: Run tests — expect PASS**
+- [x] **Step 5: Run tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/lib/data/meetings.test.ts
 ```
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add lib/data/meetings.ts lib/data/notes.ts __tests__/lib/data/meetings.test.ts
