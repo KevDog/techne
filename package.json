@@ -13,16 +13,16 @@
     "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
-    "@liveblocks/client": "^3.19.0",
-    "@liveblocks/node": "^3.19.0",
-    "@liveblocks/react": "^3.19.0",
+    "@liveblocks/client": "^3.19.5",
+    "@liveblocks/node": "^3.19.5",
+    "@liveblocks/react": "^3.19.5",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.105.3",
     "next": "16.2.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-markdown": "^10.1.0",
-    "react-resizable-panels": "^4.11.0"
+    "react-resizable-panels": "^4.11.2"
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",

@@ -1438,7 +1438,8 @@ export function MaterialPanel({ material }: Props) {
 ```tsx
 'use client'
 
-import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels'
+// react-resizable-panels v4 API: Group / Panel / Separator (not PanelGroup / PanelResizeHandle)
+import { Group, Panel, Separator } from 'react-resizable-panels'
 import { MaterialPanel } from '@/components/meetings/MaterialPanel'
 import type { Material } from '@/lib/types/domain'
 
@@ -1460,7 +1461,7 @@ export function LightTable({ materials, panelSizes, onPanelResize }: Props) {
   const defaultSizes = panelSizes.length === materials.length ? panelSizes : undefined
 
   return (
-    <PanelGroup
+    <Group
       direction="horizontal"
       onLayout={onPanelResize}
       className="h-full"
@@ -1471,14 +1472,14 @@ export function LightTable({ materials, panelSizes, onPanelResize }: Props) {
             <MaterialPanel material={mat} />
           </Panel>
           {i < materials.length - 1 && (
-            <PanelResizeHandle
+            <Separator
               key={`handle-${i}`}
               className="w-1 bg-neutral-800 hover:bg-blue-600 transition-colors cursor-col-resize"
             />
           )}
         </>
       ))}
-    </PanelGroup>
+    </Group>
   )
 }
 ```
