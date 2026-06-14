@@ -1281,7 +1281,7 @@ git commit -m "feat: add meeting server actions with tests"
 - Create: `components/meetings/JoinPrompt.tsx`
 - Create: `__tests__/components/meetings/JoinPrompt.test.tsx`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```tsx
 // __tests__/components/meetings/JoinPrompt.test.tsx
@@ -1314,13 +1314,13 @@ describe('JoinPrompt', () => {
 })
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/components/meetings/JoinPrompt.test.tsx
 ```
 
-- [ ] **Step 3: Implement `components/meetings/JoinPrompt.tsx`**
+- [x] **Step 3: Implement `components/meetings/JoinPrompt.tsx`**
 
 ```tsx
 'use client'
@@ -1359,13 +1359,13 @@ export function JoinPrompt({ onJoin }: Props) {
 }
 ```
 
-- [ ] **Step 4: Run tests — expect PASS**
+- [x] **Step 4: Run tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/components/meetings/JoinPrompt.test.tsx
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add components/meetings/JoinPrompt.tsx __tests__/components/meetings/JoinPrompt.test.tsx
@@ -1382,7 +1382,7 @@ git commit -m "feat: add JoinPrompt component with tests"
 
 No unit tests for these — they render Supabase-fetched materials and `react-resizable-panels` internals; covered by manual QA.
 
-- [ ] **Step 1: Implement `components/meetings/MaterialPanel.tsx`**
+- [x] **Step 1: Implement `components/meetings/MaterialPanel.tsx`**
 
 ```tsx
 'use client'
@@ -1433,7 +1433,7 @@ export function MaterialPanel({ material }: Props) {
 }
 ```
 
-- [ ] **Step 2: Implement `components/meetings/LightTable.tsx`**
+- [x] **Step 2: Implement `components/meetings/LightTable.tsx`**
 
 ```tsx
 'use client'
@@ -1484,7 +1484,7 @@ export function LightTable({ materials, panelSizes, onPanelResize }: Props) {
 }
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add components/meetings/MaterialPanel.tsx components/meetings/LightTable.tsx
@@ -1499,7 +1499,7 @@ git commit -m "feat: add MaterialPanel and LightTable components"
 - Create: `components/meetings/Filmstrip.tsx`
 - Create: `__tests__/components/meetings/Filmstrip.test.tsx`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```tsx
 // __tests__/components/meetings/Filmstrip.test.tsx
@@ -1574,13 +1574,13 @@ describe('Filmstrip', () => {
 })
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/components/meetings/Filmstrip.test.tsx
 ```
 
-- [ ] **Step 3: Implement `components/meetings/Filmstrip.tsx`**
+- [x] **Step 3: Implement `components/meetings/Filmstrip.tsx`**
 
 ```tsx
 'use client'
@@ -1702,13 +1702,13 @@ export function Filmstrip({
 }
 ```
 
-- [ ] **Step 4: Run tests — expect PASS**
+- [x] **Step 4: Run tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/components/meetings/Filmstrip.test.tsx
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add components/meetings/Filmstrip.tsx __tests__/components/meetings/Filmstrip.test.tsx
@@ -1726,7 +1726,7 @@ git commit -m "feat: add Filmstrip component with filter controls and tests"
 - Create: `components/meetings/PresenterRequestToast.tsx`
 - Create: `__tests__/components/meetings/PresenterControls.test.tsx`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```tsx
 // __tests__/components/meetings/PresenterControls.test.tsx
@@ -1813,13 +1813,13 @@ describe('PresenterControls', () => {
 })
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/components/meetings/PresenterControls.test.tsx
 ```
 
-- [ ] **Step 3: Implement `components/meetings/PresenceBar.tsx`**
+- [x] **Step 3: Implement `components/meetings/PresenceBar.tsx`**
 
 ```tsx
 'use client'
@@ -1853,7 +1853,7 @@ export function PresenceBar({ members }: Props) {
 }
 ```
 
-- [ ] **Step 4: Implement `components/meetings/PresenterControls.tsx`**
+- [x] **Step 4: Implement `components/meetings/PresenterControls.tsx`**
 
 ```tsx
 'use client'
@@ -1909,7 +1909,7 @@ export function PresenterControls({
 }
 ```
 
-- [ ] **Step 5: Implement `components/meetings/FollowBanner.tsx`**
+- [x] **Step 5: Implement `components/meetings/FollowBanner.tsx`**
 
 ```tsx
 'use client'
@@ -1931,7 +1931,7 @@ export function FollowBanner({ presenterName, onBrowseFreely }: Props) {
 }
 ```
 
-- [ ] **Step 6: Implement `components/meetings/PresenterRequestToast.tsx`**
+- [x] **Step 6: Implement `components/meetings/PresenterRequestToast.tsx`**
 
 ```tsx
 'use client'
@@ -1967,13 +1967,13 @@ export function PresenterRequestToast({ requesterName, onYield, onDecline }: Pro
 }
 ```
 
-- [ ] **Step 7: Run tests — expect PASS**
+- [x] **Step 7: Run tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/components/meetings/PresenterControls.test.tsx
 ```
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add components/meetings/PresenceBar.tsx components/meetings/PresenterControls.tsx \
@@ -1992,7 +1992,7 @@ git commit -m "feat: add presence bar, presenter controls, follow banner, reques
 - Create: `__tests__/components/meetings/NotesDrawer.test.tsx`
 - Create: `__tests__/components/meetings/EndMeetingButton.test.tsx`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```tsx
 // __tests__/components/meetings/NotesDrawer.test.tsx
@@ -2063,13 +2063,13 @@ describe('EndMeetingButton', () => {
 })
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/components/meetings/NotesDrawer.test.tsx __tests__/components/meetings/EndMeetingButton.test.tsx
 ```
 
-- [ ] **Step 3: Implement `components/meetings/NotesDrawer.tsx`**
+- [x] **Step 3: Implement `components/meetings/NotesDrawer.tsx`**
 
 ```tsx
 'use client'
@@ -2147,7 +2147,7 @@ export function NotesDrawer({ meetingId, notes }: Props) {
 }
 ```
 
-- [ ] **Step 4: Implement `components/meetings/EndMeetingButton.tsx`**
+- [x] **Step 4: Implement `components/meetings/EndMeetingButton.tsx`**
 
 ```tsx
 'use client'
@@ -2183,13 +2183,13 @@ export function EndMeetingButton({ meetingId, canManage, onEnd }: Props) {
 }
 ```
 
-- [ ] **Step 5: Run tests — expect PASS**
+- [x] **Step 5: Run tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/components/meetings/NotesDrawer.test.tsx __tests__/components/meetings/EndMeetingButton.test.tsx
 ```
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add components/meetings/NotesDrawer.tsx components/meetings/EndMeetingButton.tsx \
