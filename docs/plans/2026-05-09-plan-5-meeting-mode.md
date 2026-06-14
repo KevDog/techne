@@ -624,7 +624,7 @@ git commit -m "feat: add layout and filter helpers with tests"
 - Create: `lib/liveblocks/mutations.ts`
 - Create: `__tests__/lib/liveblocks/mutations.test.ts`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```ts
 // __tests__/lib/liveblocks/mutations.test.ts
@@ -749,13 +749,13 @@ describe('setFilters', () => {
 })
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/lib/liveblocks/mutations.test.ts
 ```
 
-- [ ] **Step 3: Implement `lib/liveblocks/mutations.ts`**
+- [x] **Step 3: Implement `lib/liveblocks/mutations.ts`**
 
 ```ts
 import { defaultPanelSizes } from '@/lib/liveblocks/layout'
@@ -810,13 +810,13 @@ export function setFilters(storage: StorageLike, filters: LBFilters) {
 }
 ```
 
-- [ ] **Step 4: Run tests — expect PASS**
+- [x] **Step 4: Run tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/lib/liveblocks/mutations.test.ts
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/liveblocks/mutations.ts __tests__/lib/liveblocks/mutations.test.ts
