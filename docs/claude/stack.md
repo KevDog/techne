@@ -4,7 +4,7 @@
 
 | Layer | Technology |
 | --- | --- |
-| Framework | Next.js 14 (App Router) |
+| Framework | Next.js 16.2.6 (App Router) |
 | Real-time | Liveblocks |
 | Auth + DB + Storage | Supabase |
 | AI agents | Claude API (via Server Actions) |
@@ -14,7 +14,7 @@
 
 ## Agent Assignments
 
-- **All front-end work** (UI components, layouts, pages, styles) → use `frontend-design` agent
+- **All implementation work** (frontend, backend, tests) → `builder` agent via `/build-loop`
 - **Agent orchestration features** → use `claude-api` skill
 
 ## Design Spec

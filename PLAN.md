@@ -1,5 +1,9 @@
 # Techne — Implementation Plan
 
+> **Running a plan:** Pass the individual plan file to `/build-loop`, e.g.:
+> `/build-loop docs/plans/2026-05-09-plan-5-meeting-mode.md`
+> Do not run `/build-loop` without a path — it will not find the right file from this index.
+
 ## Milestones
 
 ### Milestone 1: Foundation
