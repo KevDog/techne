@@ -2206,7 +2206,7 @@ git commit -m "feat: add NotesDrawer and EndMeetingButton with tests"
 
 No unit tests — this component is an integration of all previous pieces and Liveblocks hooks. Covered by manual QA.
 
-- [ ] **Step 1: Implement `components/meetings/MeetingRoom.tsx`**
+- [x] **Step 1: Implement `components/meetings/MeetingRoom.tsx`**
 
 ```tsx
 'use client'
@@ -2490,7 +2490,7 @@ export function MeetingRoom(props: Props) {
 }
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add components/meetings/MeetingRoom.tsx
