@@ -445,7 +445,7 @@ git commit -m "feat: add Meeting types and Liveblocks config"
 - Create: `__tests__/lib/liveblocks/layout.test.ts`
 - Create: `__tests__/lib/liveblocks/filters.test.ts`
 
-- [ ] **Step 1: Write failing tests for `layout.ts`**
+- [x] **Step 1: Write failing tests for `layout.ts`**
 
 ```ts
 // __tests__/lib/liveblocks/layout.test.ts
@@ -486,7 +486,7 @@ describe('defaultPanelSizes', () => {
 })
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/lib/liveblocks/layout.test.ts
@@ -494,7 +494,7 @@ npx vitest run __tests__/lib/liveblocks/layout.test.ts
 
 Expected: FAIL — `defaultPanelSizes` not found.
 
-- [ ] **Step 3: Implement `lib/liveblocks/layout.ts`**
+- [x] **Step 3: Implement `lib/liveblocks/layout.ts`**
 
 ```ts
 export function defaultPanelSizes(n: number): number[] {
@@ -506,13 +506,13 @@ export function defaultPanelSizes(n: number): number[] {
 }
 ```
 
-- [ ] **Step 4: Run layout tests — expect PASS**
+- [x] **Step 4: Run layout tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/lib/liveblocks/layout.test.ts
 ```
 
-- [ ] **Step 5: Write failing tests for `filters.ts`**
+- [x] **Step 5: Write failing tests for `filters.ts`**
 
 ```ts
 // __tests__/lib/liveblocks/filters.test.ts
@@ -579,7 +579,7 @@ describe('filterMaterials', () => {
 })
 ```
 
-- [ ] **Step 6: Run to verify failure**
+- [x] **Step 6: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/lib/liveblocks/filters.test.ts
@@ -587,7 +587,7 @@ npx vitest run __tests__/lib/liveblocks/filters.test.ts
 
 Expected: FAIL.
 
-- [ ] **Step 7: Implement `lib/liveblocks/filters.ts`**
+- [x] **Step 7: Implement `lib/liveblocks/filters.ts`**
 
 ```ts
 import type { Material } from '@/lib/types/domain'
@@ -603,13 +603,13 @@ export function filterMaterials(materials: Material[], filters: LBFilters): Mate
 }
 ```
 
-- [ ] **Step 8: Run all liveblocks helper tests — expect PASS**
+- [x] **Step 8: Run all liveblocks helper tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/lib/liveblocks/
 ```
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add lib/liveblocks/ __tests__/lib/liveblocks/layout.test.ts __tests__/lib/liveblocks/filters.test.ts
