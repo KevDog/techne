@@ -270,7 +270,7 @@ git commit -m "feat: add meetings table and update notes RLS"
 - Create: `lib/liveblocks.config.ts`
 - Create: `app/api/liveblocks-auth/route.ts`
 
-- [ ] **Step 1: Add `Meeting` and `MeetingNote` to `lib/types/domain.ts`**
+- [x] **Step 1: Add `Meeting` and `MeetingNote` to `lib/types/domain.ts`**
 
 Append to the end of the file:
 
@@ -289,7 +289,7 @@ export type Meeting = {
 export type MeetingNote = Note
 ```
 
-- [ ] **Step 2: Add `meetings` table to `lib/types/db.ts`**
+- [x] **Step 2: Add `meetings` table to `lib/types/db.ts`**
 
 Inside the `Tables` object (after the last table entry, before the closing `}`), append:
 
@@ -329,7 +329,7 @@ Inside the `Tables` object (after the last table entry, before the closing `}`),
       }
 ```
 
-- [ ] **Step 3: Create `lib/liveblocks.config.ts`**
+- [x] **Step 3: Create `lib/liveblocks.config.ts`**
 
 ```ts
 import { createClient } from '@liveblocks/client'
@@ -393,7 +393,7 @@ export const {
 } = createRoomContext<LBPresence, LBStorage, LBUserMeta, LBRoomEvent>(client)
 ```
 
-- [ ] **Step 4: Create `app/api/liveblocks-auth/route.ts`**
+- [x] **Step 4: Create `app/api/liveblocks-auth/route.ts`**
 
 ```ts
 import { Liveblocks } from '@liveblocks/node'
@@ -428,7 +428,7 @@ export async function POST(req: Request) {
 }
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/types/domain.ts lib/types/db.ts lib/liveblocks.config.ts app/api/liveblocks-auth/route.ts
