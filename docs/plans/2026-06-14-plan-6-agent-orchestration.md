@@ -47,7 +47,7 @@
 - `package.json` (modified by npm install)
 - `.env.local` (add ANTHROPIC_API_KEY entry)
 
-- [ ] **Step 1: Install `@anthropic-ai/sdk`**
+- [x] **Step 1: Install `@anthropic-ai/sdk`**
 
 ```bash
 npm install @anthropic-ai/sdk
@@ -55,7 +55,7 @@ npm install @anthropic-ai/sdk
 
 Expected: `@anthropic-ai/sdk` appears in `package.json` `dependencies` and `node_modules`.
 
-- [ ] **Step 2: Add `ANTHROPIC_API_KEY` to `.env.local`**
+- [x] **Step 2: Add `ANTHROPIC_API_KEY` to `.env.local`**
 
 ```
 ANTHROPIC_API_KEY=sk-ant-your-key-here
@@ -63,7 +63,7 @@ ANTHROPIC_API_KEY=sk-ant-your-key-here
 
 Get the key from the Anthropic Console. The key must never be set as a `NEXT_PUBLIC_` variable.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add package.json package-lock.json
