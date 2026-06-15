@@ -123,3 +123,31 @@ export type Meeting = {
 }
 
 export type MeetingNote = Note
+
+// ── Agent result types ────────────────────────────────────────────────────────
+
+export type AgentTagSuggestion = {
+  tags: string[]
+  rationale: string
+}
+
+export type AgentSearchHit = {
+  materialId: string
+  title: string
+  department: string
+  state: MaterialState
+  snippet: string
+}
+
+export type AgentSearchResult = {
+  hits: AgentSearchHit[]
+  summary: string
+}
+
+export type AgentSummaryResult = {
+  department: string
+  summary: string
+  decidedCount: number
+  proposedCount: number
+  exploratoryCount: number
+}
