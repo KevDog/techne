@@ -1772,7 +1772,7 @@ git commit -m "feat: wire TagSuggestionButton and DepartmentSummaryButton into D
 - Modify: `app/(app)/[orgSlug]/shows/[showSlug]/page.tsx`
 - Modify: `__tests__/app/(app)/[orgSlug]/shows/[showSlug]/page.test.tsx`
 
-- [ ] **Step 1: Add `getMaterialsByShow` import to show detail page**
+- [x] **Step 1: Add `getMaterialsByShow` import to show detail page**
 
 In `app/(app)/[orgSlug]/shows/[showSlug]/page.tsx`, add:
 
@@ -1781,7 +1781,7 @@ import { getMaterialsByShow } from '@/lib/data/materials'
 import { SearchBar } from '@/components/agents/SearchBar'
 ```
 
-- [ ] **Step 2: Fetch materials when `claudeEnabled`**
+- [x] **Step 2: Fetch materials when `claudeEnabled`**
 
 In the `ShowDetailPage` server component body, after fetching `show`, conditionally fetch materials:
 
@@ -1795,7 +1795,7 @@ const departmentNameById = Object.fromEntries(
 )
 ```
 
-- [ ] **Step 3: Add `SearchBar` to the show header nav area**
+- [x] **Step 3: Add `SearchBar` to the show header nav area**
 
 In the JSX, inside the show header section (where the Meetings nav link is), add the `SearchBar` conditionally after the existing `nav` element:
 
@@ -1811,7 +1811,7 @@ In the JSX, inside the show header section (where the Meetings nav link is), add
 )}
 ```
 
-- [ ] **Step 4: Update the show detail page test fixture to include `claudeEnabled: false`**
+- [x] **Step 4: Update the show detail page test fixture to include `claudeEnabled: false`**
 
 In `__tests__/app/(app)/[orgSlug]/shows/[showSlug]/page.test.tsx`, verify that the `org` mock fixture has `settings: { claudeEnabled: false }`. Add the mock for `getMaterialsByShow` returning `[]`:
 
@@ -1829,7 +1829,7 @@ vi.mock('@/components/agents/SearchBar', () => ({
 }))
 ```
 
-- [ ] **Step 5: Run all tests**
+- [x] **Step 5: Run all tests**
 
 ```bash
 npx vitest run
@@ -1837,7 +1837,7 @@ npx vitest run
 
 Expected: all tests PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add "app/(app)/[orgSlug]/shows/[showSlug]/page.tsx" \
