@@ -1849,7 +1849,7 @@ git commit -m "feat: add SearchBar to show detail page behind claudeEnabled gate
 
 ## Task 10: Full test suite verification
 
-- [ ] **Step 1: Run the complete test suite**
+- [x] **Step 1: Run the complete test suite**
 
 ```bash
 npx vitest run
@@ -1857,7 +1857,7 @@ npx vitest run
 
 Expected: all tests pass with no regressions from prior plans.
 
-- [ ] **Step 2: Run TypeScript check**
+- [x] **Step 2: Run TypeScript check**
 
 ```bash
 npx tsc --noEmit
@@ -1865,7 +1865,7 @@ npx tsc --noEmit
 
 Expected: no errors.
 
-- [ ] **Step 3: Verify `claudeEnabled = false` hides all agent UI (manual check)**
+- [x] **Step 3: Verify `claudeEnabled = false` hides all agent UI (manual check)**
 
 In `.env.local`, ensure Supabase has `claude_enabled = false` for the test org. Run `npm run dev` and confirm:
 - No "Suggest tags" button appears in the DetailPanel
@@ -1874,7 +1874,7 @@ In `.env.local`, ensure Supabase has `claude_enabled = false` for the test org. 
 
 Then toggle `claude_enabled = true` via Supabase Studio and confirm each UI entry point appears.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git commit -m "chore: all agent orchestration tests pass, claudeEnabled gate verified"
