@@ -27,7 +27,7 @@
 
 | Plan | Subsystem | Status | File |
 | --- | --- | --- | --- |
-| 5 | Real-time meeting mode | Ready | `docs/plans/2026-05-09-plan-5-meeting-mode.md` |
+| 5 | Real-time meeting mode | Complete | `docs/plans/2026-05-09-plan-5-meeting-mode.md` |
 
 ### Milestone 4: Agent Orchestration
 > Optional Claude-powered tagging, search, and summarization.
