@@ -526,7 +526,7 @@ git commit -m "feat: add pure prompt-builder helpers for tagging, search, and su
 - Create: `lib/actions/agents.ts`
 - Create: `__tests__/lib/actions/agents.test.ts`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```ts
 // __tests__/lib/actions/agents.test.ts
@@ -712,7 +712,7 @@ describe('summarizeDepartment', () => {
 })
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/lib/actions/agents.test.ts
@@ -720,7 +720,7 @@ npx vitest run __tests__/lib/actions/agents.test.ts
 
 Expected: FAIL — `@/lib/actions/agents` not found.
 
-- [ ] **Step 3: Implement `lib/actions/agents.ts`**
+- [x] **Step 3: Implement `lib/actions/agents.ts`**
 
 ```ts
 'use server'
@@ -851,13 +851,13 @@ export async function summarizeDepartment(
 }
 ```
 
-- [ ] **Step 4: Run tests — expect PASS**
+- [x] **Step 4: Run tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/lib/actions/agents.test.ts
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/actions/agents.ts __tests__/lib/actions/agents.test.ts
