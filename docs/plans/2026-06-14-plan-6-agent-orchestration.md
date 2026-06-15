@@ -77,7 +77,7 @@ git commit -m "chore: install @anthropic-ai/sdk"
 **Files:**
 - Modify: `lib/types/domain.ts`
 
-- [ ] **Step 1: Append agent result types to `lib/types/domain.ts`**
+- [x] **Step 1: Append agent result types to `lib/types/domain.ts`**
 
 Append after the `MeetingNote` type at the end of the file:
 
@@ -111,7 +111,7 @@ export type AgentSummaryResult = {
 }
 ```
 
-- [ ] **Step 2: Run type check**
+- [x] **Step 2: Run type check**
 
 ```bash
 npx tsc --noEmit
@@ -119,7 +119,7 @@ npx tsc --noEmit
 
 Expected: no errors.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add lib/types/domain.ts
