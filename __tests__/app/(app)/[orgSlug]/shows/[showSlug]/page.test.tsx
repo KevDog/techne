@@ -33,6 +33,12 @@ const mockShow: ShowDetail = {
 vi.mock('@/lib/data/orgs', () => ({ getOrgBySlug: vi.fn().mockResolvedValue(org) }))
 vi.mock('@/lib/data/shows', () => ({ getShowBySlug: vi.fn().mockResolvedValue(mockShow) }))
 vi.mock('@/lib/data/notes', () => ({ getNotesByShow: vi.fn().mockResolvedValue([]) }))
+vi.mock('@/lib/data/materials', () => ({
+  getMaterialsByShow: vi.fn().mockResolvedValue([]),
+}))
+vi.mock('@/components/agents/SearchBar', () => ({
+  SearchBar: () => null,
+}))
 vi.mock(
   '@/app/(app)/[orgSlug]/shows/[showSlug]/ShowNotesSection',
   () => ({ ShowNotesSection: () => <div data-testid="show-notes" /> })
