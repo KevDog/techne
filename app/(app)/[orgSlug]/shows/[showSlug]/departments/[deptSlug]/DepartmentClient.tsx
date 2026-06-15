@@ -7,6 +7,8 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client'
 import type { MaterialWithUrl } from '@/lib/data/materials'
 import type { MaterialType, MaterialState, NoteWithAuthors } from '@/lib/types/domain'
 import { NoteList } from '@/components/NoteList'
+import { TagSuggestionButton } from '@/components/agents/TagSuggestionButton'
+import { DepartmentSummaryButton } from '@/components/agents/DepartmentSummaryButton'
 
 type Props = {
   materials: MaterialWithUrl[]
@@ -15,6 +17,9 @@ type Props = {
   showId: string
   deptId: string
   allowReopen: boolean
+  claudeEnabled: boolean
+  showName: string
+  departmentName: string
 }
 
 type TabFilter = 'all' | MaterialState
@@ -41,7 +46,7 @@ function StateBadge({ state }: { state: MaterialState }) {
   )
 }
 
-export function DepartmentClient({ materials, notesByMaterial, orgId, showId, deptId, allowReopen }: Props) {
+export function DepartmentClient({ materials, notesByMaterial, orgId, showId, deptId, allowReopen, claudeEnabled, showName, departmentName }: Props) {
   const [activeTab, setActiveTab] = useState<TabFilter>('all')
   const [selected, setSelected] = useState<MaterialWithUrl | null>(null)
   const [uploadOpen, setUploadOpen] = useState(false)
@@ -93,12 +98,21 @@ export function DepartmentClient({ materials, notesByMaterial, orgId, showId, de
               </button>
             ))}
           </div>
-          <button
-            onClick={() => setUploadOpen(true)}
-            className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-500"
-          >
-            + Add Material
-          </button>
+          <div className="flex items-center gap-2">
+            {claudeEnabled && (
+              <DepartmentSummaryButton
+                materials={materials}
+                showName={showName}
+                departmentName={departmentName}
+              />
+            )}
+            <button
+              onClick={() => setUploadOpen(true)}
+              className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-500"
+            >
+              + Add Material
+            </button>
+          </div>
         </div>
 
         {/* Materials list */}
@@ -172,6 +186,10 @@ export function DepartmentClient({ materials, notesByMaterial, orgId, showId, de
             setSelected((prev) => prev ? { ...prev, tags: newTags } : null)
           }}
           onDelete={handleDelete}
+          claudeEnabled={claudeEnabled}
+          showName={showName}
+          departmentName={departmentName}
+          existingTags={[...new Set(materials.flatMap((m) => m.tags))]}
         />
       )}
 
@@ -198,6 +216,10 @@ function DetailPanel({
   onTransition,
   onTagsChange,
   onDelete,
+  claudeEnabled,
+  showName,
+  departmentName,
+  existingTags,
 }: {
   material: MaterialWithUrl
   notes: NoteWithAuthors[]
@@ -206,6 +228,10 @@ function DetailPanel({
   onTransition: (id: string, target: MaterialState) => void
   onTagsChange: (tags: string[]) => void
   onDelete: (id: string) => void
+  claudeEnabled: boolean
+  showName: string
+  departmentName: string
+  existingTags: string[]
 }) {
   const [newTag, setNewTag] = useState('')
 
@@ -302,6 +328,19 @@ function DetailPanel({
             +
           </button>
         </div>
+        {claudeEnabled && (
+          <TagSuggestionButton
+            material={material}
+            showName={showName}
+            departmentName={departmentName}
+            existingTags={existingTags}
+            onAccept={(suggestedTags) => {
+              const merged = [...new Set([...material.tags, ...suggestedTags])]
+              onTagsChange(merged)
+              updateTags(material.id, merged)
+            }}
+          />
+        )}
       </div>
 
       {/* Notes */}

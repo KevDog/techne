@@ -63,6 +63,9 @@ export default async function DepartmentPage({ params }: Props) {
         showId={show.id}
         deptId={dept.id}
         allowReopen={show.allowReopen}
+        claudeEnabled={org.settings.claudeEnabled}
+        showName={show.name}
+        departmentName={dept.name}
       />
     </div>
   )
