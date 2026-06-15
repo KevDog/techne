@@ -140,7 +140,7 @@ These helpers are pure functions with no I/O — easy to test without mocking.
 - Create: `__tests__/lib/agents/search.test.ts`
 - Create: `__tests__/lib/agents/summary.test.ts`
 
-- [ ] **Step 1: Write failing tests for `tagging.ts`**
+- [x] **Step 1: Write failing tests for `tagging.ts`**
 
 ```ts
 // __tests__/lib/agents/tagging.test.ts
@@ -197,7 +197,7 @@ describe('buildTaggingPrompt', () => {
 })
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/lib/agents/tagging.test.ts
@@ -205,7 +205,7 @@ npx vitest run __tests__/lib/agents/tagging.test.ts
 
 Expected: FAIL — module not found.
 
-- [ ] **Step 3: Implement `lib/agents/tagging.ts`**
+- [x] **Step 3: Implement `lib/agents/tagging.ts`**
 
 ```ts
 import type { Material } from '@/lib/types/domain'
@@ -238,13 +238,13 @@ Respond with valid JSON only, in this exact shape:
 }
 ```
 
-- [ ] **Step 4: Run tagging tests — expect PASS**
+- [x] **Step 4: Run tagging tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/lib/agents/tagging.test.ts
 ```
 
-- [ ] **Step 5: Write failing tests for `search.ts`**
+- [x] **Step 5: Write failing tests for `search.ts`**
 
 ```ts
 // __tests__/lib/agents/search.test.ts
@@ -329,13 +329,13 @@ describe('buildSearchPrompt', () => {
 })
 ```
 
-- [ ] **Step 6: Run to verify failure**
+- [x] **Step 6: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/lib/agents/search.test.ts
 ```
 
-- [ ] **Step 7: Implement `lib/agents/search.ts`**
+- [x] **Step 7: Implement `lib/agents/search.ts`**
 
 ```ts
 import type { Material } from '@/lib/types/domain'
@@ -380,13 +380,13 @@ Respond with valid JSON only:
 }
 ```
 
-- [ ] **Step 8: Run search tests — expect PASS**
+- [x] **Step 8: Run search tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/lib/agents/search.test.ts
 ```
 
-- [ ] **Step 9: Write failing tests for `summary.ts`**
+- [x] **Step 9: Write failing tests for `summary.ts`**
 
 ```ts
 // __tests__/lib/agents/summary.test.ts
@@ -458,13 +458,13 @@ describe('buildSummaryPrompt', () => {
 })
 ```
 
-- [ ] **Step 10: Run to verify failure**
+- [x] **Step 10: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/lib/agents/summary.test.ts
 ```
 
-- [ ] **Step 11: Implement `lib/agents/summary.ts`**
+- [x] **Step 11: Implement `lib/agents/summary.ts`**
 
 ```ts
 import type { Material } from '@/lib/types/domain'
@@ -505,13 +505,13 @@ Respond with valid JSON only:
 }
 ```
 
-- [ ] **Step 12: Run all agent helper tests — expect PASS**
+- [x] **Step 12: Run all agent helper tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/lib/agents/
 ```
 
-- [ ] **Step 13: Commit**
+- [x] **Step 13: Commit**
 
 ```bash
 git add lib/agents/ __tests__/lib/agents/
