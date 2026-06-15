@@ -1,9 +1,9 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, type Mock } from 'vitest'
 
-const mockSingle = vi.fn()
-const mockOrder = vi.fn(() => ({ single: mockSingle }))
-const mockEq = vi.fn(() => ({ order: mockOrder, single: mockSingle }))
-const mockSelect = vi.fn(() => ({ eq: mockEq }))
+const mockSingle: Mock = vi.fn()
+const mockOrder: Mock = vi.fn(() => ({ single: mockSingle }))
+const mockEq: Mock = vi.fn(() => ({ order: mockOrder, single: mockSingle }))
+const mockSelect: Mock = vi.fn(() => ({ eq: mockEq }))
 
 vi.mock('@/lib/supabase/server', () => ({
   createSupabaseServerClient: vi.fn().mockResolvedValue({

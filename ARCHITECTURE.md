@@ -1,6 +1,6 @@
 # Architecture
 
-> Full decision rationale: `docs/superpowers/specs/2026-05-07-framework-selection-design.md`
+> Full decision rationale: `docs/specs/2026-05-07-framework-selection-design.md`
 
 ---
 
@@ -19,7 +19,7 @@ No audio/video. Users run their own meeting tools (Zoom, Meet, etc.) alongside t
 
 | Layer | Technology | Why |
 | --- | --- | --- |
-| Framework | Next.js 14 (App Router) | TypeScript-first, Server Components, Server Actions, streaming |
+| Framework | Next.js 16.2.6 (App Router) | TypeScript-first, Server Components, Server Actions, streaming |
 | Real-time | Liveblocks | Purpose-built presence + shared state; handles conflict resolution |
 | Auth + DB + Storage | Supabase | Postgres + RLS, file storage, auth, generous free tier |
 | AI agents | Claude API (Server Actions only) | Keys never leave server; streaming built in; optional per org |

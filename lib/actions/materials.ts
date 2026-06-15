@@ -1,9 +1,20 @@
 'use server'
 
+import { z } from 'zod'
 import { revalidatePath } from 'next/cache'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import type { MaterialType, MaterialState } from '@/lib/types/domain'
 import { isValidTransition } from '@/lib/utils/material-transitions'
+
+const URL_TYPES: ReadonlySet<MaterialType> = new Set(['link', 'image'])
+
+function validateHttpUrl(url: string): string {
+  const parsed = z.string().url().safeParse(url)
+  if (!parsed.success) throw new Error('Invalid URL')
+  const protocol = new URL(parsed.data).protocol
+  if (protocol !== 'https:' && protocol !== 'http:') throw new Error('Invalid URL')
+  return parsed.data
+}
 
 export async function createMaterial(
   deptId: string,
@@ -17,11 +28,8 @@ export async function createMaterial(
     tags?: string[]
   }
 ): Promise<{ id: string }> {
-  if (type === 'link' && data.url) {
-    const normalized = data.url.trim().toLowerCase()
-    if (normalized.startsWith('javascript:') || normalized.startsWith('data:')) {
-      throw new Error('Invalid URL')
-    }
+  if (URL_TYPES.has(type) && data.url) {
+    data = { ...data, url: validateHttpUrl(data.url) }
   }
 
   const supabase = await createSupabaseServerClient()

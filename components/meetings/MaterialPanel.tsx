@@ -5,7 +5,18 @@ import type { Material } from '@/lib/types/domain'
 
 type Props = { material: Material }
 
+function safeHttpUrl(u: string | null | undefined): string | null {
+  if (!u) return null
+  try {
+    const url = new URL(u)
+    return url.protocol === 'https:' || url.protocol === 'http:' ? url.toString() : null
+  } catch {
+    return null
+  }
+}
+
 export function MaterialPanel({ material }: Props) {
+  const safeUrl = safeHttpUrl(material.url)
   return (
     <div className="h-full flex flex-col bg-neutral-900 border border-neutral-700 rounded overflow-hidden">
       <div className="px-3 py-2 border-b border-neutral-700 flex items-center gap-2">
@@ -21,13 +32,13 @@ export function MaterialPanel({ material }: Props) {
         </span>
       </div>
       <div className="flex-1 overflow-auto p-4">
-        {material.type === 'image' && material.url && (
-          <img src={material.url} alt={material.title} className="max-w-full max-h-full object-contain mx-auto" />
+        {material.type === 'image' && safeUrl && (
+          <img src={safeUrl} alt={material.title} className="max-w-full max-h-full object-contain mx-auto" />
         )}
-        {material.type === 'link' && material.url && (
-          <a href={material.url} target="_blank" rel="noopener noreferrer"
+        {material.type === 'link' && safeUrl && (
+          <a href={safeUrl} target="_blank" rel="noopener noreferrer"
             className="text-blue-400 underline break-all">
-            {material.url}
+            {safeUrl}
           </a>
         )}
         {material.type === 'note' && material.body && (

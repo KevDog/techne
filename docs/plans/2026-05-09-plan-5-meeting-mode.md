@@ -53,7 +53,7 @@
 
 ## Task 1: Install dependencies
 
-- [ ] **Step 1: Install runtime packages**
+- [x] **Step 1: Install runtime packages**
 
 ```bash
 npm install @liveblocks/client @liveblocks/react @liveblocks/node react-resizable-panels
@@ -61,7 +61,7 @@ npm install @liveblocks/client @liveblocks/react @liveblocks/node react-resizabl
 
 Expected: packages added to `node_modules` and `package.json`.
 
-- [ ] **Step 2: Add `LIVEBLOCKS_SECRET_KEY` to `.env.local`**
+- [x] **Step 2: Add `LIVEBLOCKS_SECRET_KEY` to `.env.local`**
 
 ```
 LIVEBLOCKS_SECRET_KEY=sk_dev_your_key_here
@@ -69,7 +69,7 @@ LIVEBLOCKS_SECRET_KEY=sk_dev_your_key_here
 
 Get the key from the Liveblocks dashboard → Settings → API Keys.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add package.json package-lock.json
@@ -83,7 +83,7 @@ git commit -m "chore: install liveblocks and react-resizable-panels"
 **Files:**
 - Create: `supabase/migrations/20260509400000_plan_5_meetings.sql`
 
-- [ ] **Step 1: Write the migration**
+- [x] **Step 1: Write the migration**
 
 ```sql
 -- supabase/migrations/20260509400000_plan_5_meetings.sql
@@ -245,7 +245,7 @@ create policy "org members can update notes"
   );
 ```
 
-- [ ] **Step 2: Apply the migration**
+- [x] **Step 2: Apply the migration**
 
 ```bash
 npx supabase db push
@@ -253,7 +253,7 @@ npx supabase db push
 
 Expected: migration applied with no errors.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add supabase/migrations/20260509400000_plan_5_meetings.sql
@@ -270,7 +270,7 @@ git commit -m "feat: add meetings table and update notes RLS"
 - Create: `lib/liveblocks.config.ts`
 - Create: `app/api/liveblocks-auth/route.ts`
 
-- [ ] **Step 1: Add `Meeting` and `MeetingNote` to `lib/types/domain.ts`**
+- [x] **Step 1: Add `Meeting` and `MeetingNote` to `lib/types/domain.ts`**
 
 Append to the end of the file:
 
@@ -289,7 +289,7 @@ export type Meeting = {
 export type MeetingNote = Note
 ```
 
-- [ ] **Step 2: Add `meetings` table to `lib/types/db.ts`**
+- [x] **Step 2: Add `meetings` table to `lib/types/db.ts`**
 
 Inside the `Tables` object (after the last table entry, before the closing `}`), append:
 
@@ -329,7 +329,7 @@ Inside the `Tables` object (after the last table entry, before the closing `}`),
       }
 ```
 
-- [ ] **Step 3: Create `lib/liveblocks.config.ts`**
+- [x] **Step 3: Create `lib/liveblocks.config.ts`**
 
 ```ts
 import { createClient } from '@liveblocks/client'
@@ -393,7 +393,7 @@ export const {
 } = createRoomContext<LBPresence, LBStorage, LBUserMeta, LBRoomEvent>(client)
 ```
 
-- [ ] **Step 4: Create `app/api/liveblocks-auth/route.ts`**
+- [x] **Step 4: Create `app/api/liveblocks-auth/route.ts`**
 
 ```ts
 import { Liveblocks } from '@liveblocks/node'
@@ -428,7 +428,7 @@ export async function POST(req: Request) {
 }
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/types/domain.ts lib/types/db.ts lib/liveblocks.config.ts app/api/liveblocks-auth/route.ts
@@ -445,7 +445,7 @@ git commit -m "feat: add Meeting types and Liveblocks config"
 - Create: `__tests__/lib/liveblocks/layout.test.ts`
 - Create: `__tests__/lib/liveblocks/filters.test.ts`
 
-- [ ] **Step 1: Write failing tests for `layout.ts`**
+- [x] **Step 1: Write failing tests for `layout.ts`**
 
 ```ts
 // __tests__/lib/liveblocks/layout.test.ts
@@ -486,7 +486,7 @@ describe('defaultPanelSizes', () => {
 })
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/lib/liveblocks/layout.test.ts
@@ -494,7 +494,7 @@ npx vitest run __tests__/lib/liveblocks/layout.test.ts
 
 Expected: FAIL — `defaultPanelSizes` not found.
 
-- [ ] **Step 3: Implement `lib/liveblocks/layout.ts`**
+- [x] **Step 3: Implement `lib/liveblocks/layout.ts`**
 
 ```ts
 export function defaultPanelSizes(n: number): number[] {
@@ -506,13 +506,13 @@ export function defaultPanelSizes(n: number): number[] {
 }
 ```
 
-- [ ] **Step 4: Run layout tests — expect PASS**
+- [x] **Step 4: Run layout tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/lib/liveblocks/layout.test.ts
 ```
 
-- [ ] **Step 5: Write failing tests for `filters.ts`**
+- [x] **Step 5: Write failing tests for `filters.ts`**
 
 ```ts
 // __tests__/lib/liveblocks/filters.test.ts
@@ -579,7 +579,7 @@ describe('filterMaterials', () => {
 })
 ```
 
-- [ ] **Step 6: Run to verify failure**
+- [x] **Step 6: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/lib/liveblocks/filters.test.ts
@@ -587,7 +587,7 @@ npx vitest run __tests__/lib/liveblocks/filters.test.ts
 
 Expected: FAIL.
 
-- [ ] **Step 7: Implement `lib/liveblocks/filters.ts`**
+- [x] **Step 7: Implement `lib/liveblocks/filters.ts`**
 
 ```ts
 import type { Material } from '@/lib/types/domain'
@@ -603,13 +603,13 @@ export function filterMaterials(materials: Material[], filters: LBFilters): Mate
 }
 ```
 
-- [ ] **Step 8: Run all liveblocks helper tests — expect PASS**
+- [x] **Step 8: Run all liveblocks helper tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/lib/liveblocks/
 ```
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add lib/liveblocks/ __tests__/lib/liveblocks/layout.test.ts __tests__/lib/liveblocks/filters.test.ts
@@ -624,7 +624,7 @@ git commit -m "feat: add layout and filter helpers with tests"
 - Create: `lib/liveblocks/mutations.ts`
 - Create: `__tests__/lib/liveblocks/mutations.test.ts`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```ts
 // __tests__/lib/liveblocks/mutations.test.ts
@@ -749,13 +749,13 @@ describe('setFilters', () => {
 })
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/lib/liveblocks/mutations.test.ts
 ```
 
-- [ ] **Step 3: Implement `lib/liveblocks/mutations.ts`**
+- [x] **Step 3: Implement `lib/liveblocks/mutations.ts`**
 
 ```ts
 import { defaultPanelSizes } from '@/lib/liveblocks/layout'
@@ -810,13 +810,13 @@ export function setFilters(storage: StorageLike, filters: LBFilters) {
 }
 ```
 
-- [ ] **Step 4: Run tests — expect PASS**
+- [x] **Step 4: Run tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/lib/liveblocks/mutations.test.ts
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/liveblocks/mutations.ts __tests__/lib/liveblocks/mutations.test.ts
@@ -832,7 +832,7 @@ git commit -m "feat: add Liveblocks storage mutation helpers with tests"
 - Modify: `lib/data/notes.ts`
 - Create: `__tests__/lib/data/meetings.test.ts`
 
-- [ ] **Step 1: Write failing tests for meetings data**
+- [x] **Step 1: Write failing tests for meetings data**
 
 ```ts
 // __tests__/lib/data/meetings.test.ts
@@ -895,13 +895,13 @@ describe('getMeetingById', () => {
 })
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/lib/data/meetings.test.ts
 ```
 
-- [ ] **Step 3: Implement `lib/data/meetings.ts`**
+- [x] **Step 3: Implement `lib/data/meetings.ts`**
 
 ```ts
 import { cache } from 'react'
@@ -951,7 +951,7 @@ export const getMeetingById = cache(async (meetingId: string): Promise<Meeting |
 })
 ```
 
-- [ ] **Step 4: Add `getNotesByMeeting` to `lib/data/notes.ts`**
+- [x] **Step 4: Add `getNotesByMeeting` to `lib/data/notes.ts`**
 
 Append after `getNotesByShow`:
 
@@ -971,13 +971,13 @@ export const getNotesByMeeting = cache(
 )
 ```
 
-- [ ] **Step 5: Run tests — expect PASS**
+- [x] **Step 5: Run tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/lib/data/meetings.test.ts
 ```
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add lib/data/meetings.ts lib/data/notes.ts __tests__/lib/data/meetings.test.ts
@@ -992,7 +992,7 @@ git commit -m "feat: add meetings data layer and getNotesByMeeting"
 - Create: `lib/actions/meetings.ts`
 - Create: `__tests__/lib/actions/meetings.test.ts`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```ts
 // __tests__/lib/actions/meetings.test.ts
@@ -1105,13 +1105,13 @@ describe('addMeetingNote', () => {
 })
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/lib/actions/meetings.test.ts
 ```
 
-- [ ] **Step 3: Implement `lib/actions/meetings.ts`**
+- [x] **Step 3: Implement `lib/actions/meetings.ts`**
 
 ```ts
 'use server'
@@ -1260,13 +1260,13 @@ export async function restoreMeetingNote(noteId: string): Promise<void> {
 }
 ```
 
-- [ ] **Step 4: Run tests — expect PASS**
+- [x] **Step 4: Run tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/lib/actions/meetings.test.ts
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/actions/meetings.ts __tests__/lib/actions/meetings.test.ts
@@ -1281,7 +1281,7 @@ git commit -m "feat: add meeting server actions with tests"
 - Create: `components/meetings/JoinPrompt.tsx`
 - Create: `__tests__/components/meetings/JoinPrompt.test.tsx`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```tsx
 // __tests__/components/meetings/JoinPrompt.test.tsx
@@ -1314,13 +1314,13 @@ describe('JoinPrompt', () => {
 })
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/components/meetings/JoinPrompt.test.tsx
 ```
 
-- [ ] **Step 3: Implement `components/meetings/JoinPrompt.tsx`**
+- [x] **Step 3: Implement `components/meetings/JoinPrompt.tsx`**
 
 ```tsx
 'use client'
@@ -1359,13 +1359,13 @@ export function JoinPrompt({ onJoin }: Props) {
 }
 ```
 
-- [ ] **Step 4: Run tests — expect PASS**
+- [x] **Step 4: Run tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/components/meetings/JoinPrompt.test.tsx
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add components/meetings/JoinPrompt.tsx __tests__/components/meetings/JoinPrompt.test.tsx
@@ -1382,7 +1382,7 @@ git commit -m "feat: add JoinPrompt component with tests"
 
 No unit tests for these — they render Supabase-fetched materials and `react-resizable-panels` internals; covered by manual QA.
 
-- [ ] **Step 1: Implement `components/meetings/MaterialPanel.tsx`**
+- [x] **Step 1: Implement `components/meetings/MaterialPanel.tsx`**
 
 ```tsx
 'use client'
@@ -1433,12 +1433,13 @@ export function MaterialPanel({ material }: Props) {
 }
 ```
 
-- [ ] **Step 2: Implement `components/meetings/LightTable.tsx`**
+- [x] **Step 2: Implement `components/meetings/LightTable.tsx`**
 
 ```tsx
 'use client'
 
-import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels'
+// react-resizable-panels v4 API: Group / Panel / Separator (not PanelGroup / PanelResizeHandle)
+import { Group, Panel, Separator } from 'react-resizable-panels'
 import { MaterialPanel } from '@/components/meetings/MaterialPanel'
 import type { Material } from '@/lib/types/domain'
 
@@ -1460,7 +1461,7 @@ export function LightTable({ materials, panelSizes, onPanelResize }: Props) {
   const defaultSizes = panelSizes.length === materials.length ? panelSizes : undefined
 
   return (
-    <PanelGroup
+    <Group
       direction="horizontal"
       onLayout={onPanelResize}
       className="h-full"
@@ -1471,19 +1472,19 @@ export function LightTable({ materials, panelSizes, onPanelResize }: Props) {
             <MaterialPanel material={mat} />
           </Panel>
           {i < materials.length - 1 && (
-            <PanelResizeHandle
+            <Separator
               key={`handle-${i}`}
               className="w-1 bg-neutral-800 hover:bg-blue-600 transition-colors cursor-col-resize"
             />
           )}
         </>
       ))}
-    </PanelGroup>
+    </Group>
   )
 }
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add components/meetings/MaterialPanel.tsx components/meetings/LightTable.tsx
@@ -1498,7 +1499,7 @@ git commit -m "feat: add MaterialPanel and LightTable components"
 - Create: `components/meetings/Filmstrip.tsx`
 - Create: `__tests__/components/meetings/Filmstrip.test.tsx`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```tsx
 // __tests__/components/meetings/Filmstrip.test.tsx
@@ -1573,13 +1574,13 @@ describe('Filmstrip', () => {
 })
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/components/meetings/Filmstrip.test.tsx
 ```
 
-- [ ] **Step 3: Implement `components/meetings/Filmstrip.tsx`**
+- [x] **Step 3: Implement `components/meetings/Filmstrip.tsx`**
 
 ```tsx
 'use client'
@@ -1701,13 +1702,13 @@ export function Filmstrip({
 }
 ```
 
-- [ ] **Step 4: Run tests — expect PASS**
+- [x] **Step 4: Run tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/components/meetings/Filmstrip.test.tsx
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add components/meetings/Filmstrip.tsx __tests__/components/meetings/Filmstrip.test.tsx
@@ -1725,7 +1726,7 @@ git commit -m "feat: add Filmstrip component with filter controls and tests"
 - Create: `components/meetings/PresenterRequestToast.tsx`
 - Create: `__tests__/components/meetings/PresenterControls.test.tsx`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```tsx
 // __tests__/components/meetings/PresenterControls.test.tsx
@@ -1812,13 +1813,13 @@ describe('PresenterControls', () => {
 })
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/components/meetings/PresenterControls.test.tsx
 ```
 
-- [ ] **Step 3: Implement `components/meetings/PresenceBar.tsx`**
+- [x] **Step 3: Implement `components/meetings/PresenceBar.tsx`**
 
 ```tsx
 'use client'
@@ -1852,7 +1853,7 @@ export function PresenceBar({ members }: Props) {
 }
 ```
 
-- [ ] **Step 4: Implement `components/meetings/PresenterControls.tsx`**
+- [x] **Step 4: Implement `components/meetings/PresenterControls.tsx`**
 
 ```tsx
 'use client'
@@ -1908,7 +1909,7 @@ export function PresenterControls({
 }
 ```
 
-- [ ] **Step 5: Implement `components/meetings/FollowBanner.tsx`**
+- [x] **Step 5: Implement `components/meetings/FollowBanner.tsx`**
 
 ```tsx
 'use client'
@@ -1930,7 +1931,7 @@ export function FollowBanner({ presenterName, onBrowseFreely }: Props) {
 }
 ```
 
-- [ ] **Step 6: Implement `components/meetings/PresenterRequestToast.tsx`**
+- [x] **Step 6: Implement `components/meetings/PresenterRequestToast.tsx`**
 
 ```tsx
 'use client'
@@ -1966,13 +1967,13 @@ export function PresenterRequestToast({ requesterName, onYield, onDecline }: Pro
 }
 ```
 
-- [ ] **Step 7: Run tests — expect PASS**
+- [x] **Step 7: Run tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/components/meetings/PresenterControls.test.tsx
 ```
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add components/meetings/PresenceBar.tsx components/meetings/PresenterControls.tsx \
@@ -1991,7 +1992,7 @@ git commit -m "feat: add presence bar, presenter controls, follow banner, reques
 - Create: `__tests__/components/meetings/NotesDrawer.test.tsx`
 - Create: `__tests__/components/meetings/EndMeetingButton.test.tsx`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```tsx
 // __tests__/components/meetings/NotesDrawer.test.tsx
@@ -2062,13 +2063,13 @@ describe('EndMeetingButton', () => {
 })
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/components/meetings/NotesDrawer.test.tsx __tests__/components/meetings/EndMeetingButton.test.tsx
 ```
 
-- [ ] **Step 3: Implement `components/meetings/NotesDrawer.tsx`**
+- [x] **Step 3: Implement `components/meetings/NotesDrawer.tsx`**
 
 ```tsx
 'use client'
@@ -2146,7 +2147,7 @@ export function NotesDrawer({ meetingId, notes }: Props) {
 }
 ```
 
-- [ ] **Step 4: Implement `components/meetings/EndMeetingButton.tsx`**
+- [x] **Step 4: Implement `components/meetings/EndMeetingButton.tsx`**
 
 ```tsx
 'use client'
@@ -2182,13 +2183,13 @@ export function EndMeetingButton({ meetingId, canManage, onEnd }: Props) {
 }
 ```
 
-- [ ] **Step 5: Run tests — expect PASS**
+- [x] **Step 5: Run tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/components/meetings/NotesDrawer.test.tsx __tests__/components/meetings/EndMeetingButton.test.tsx
 ```
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add components/meetings/NotesDrawer.tsx components/meetings/EndMeetingButton.tsx \
@@ -2205,7 +2206,7 @@ git commit -m "feat: add NotesDrawer and EndMeetingButton with tests"
 
 No unit tests — this component is an integration of all previous pieces and Liveblocks hooks. Covered by manual QA.
 
-- [ ] **Step 1: Implement `components/meetings/MeetingRoom.tsx`**
+- [x] **Step 1: Implement `components/meetings/MeetingRoom.tsx`**
 
 ```tsx
 'use client'
@@ -2489,7 +2490,7 @@ export function MeetingRoom(props: Props) {
 }
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add components/meetings/MeetingRoom.tsx
@@ -2504,7 +2505,7 @@ git commit -m "feat: add MeetingRoom root component with Liveblocks integration"
 - Create: `app/(app)/[orgSlug]/shows/[showSlug]/meetings/page.tsx`
 - Create: `app/(app)/[orgSlug]/shows/[showSlug]/meetings/[meetingId]/page.tsx`
 
-- [ ] **Step 1: Implement meeting list page**
+- [x] **Step 1: Implement meeting list page**
 
 ```tsx
 // app/(app)/[orgSlug]/shows/[showSlug]/meetings/page.tsx
@@ -2603,7 +2604,7 @@ export default async function MeetingsPage({ params }: Props) {
 }
 ```
 
-- [ ] **Step 2: Implement meeting room page**
+- [x] **Step 2: Implement meeting room page**
 
 ```tsx
 // app/(app)/[orgSlug]/shows/[showSlug]/meetings/[meetingId]/page.tsx
@@ -2668,7 +2669,7 @@ export default async function MeetingRoomPage({ params }: Props) {
 }
 ```
 
-- [ ] **Step 3: Check that `getMaterialsByShow` exists in `lib/data/materials.ts`. If it does not, add it:**
+- [x] **Step 3: Check that `getMaterialsByShow` exists in `lib/data/materials.ts`. If it does not, add it:**
 
 ```ts
 export const getMaterialsByShow = cache(async (showId: string): Promise<Material[]> => {
@@ -2699,7 +2700,7 @@ export const getMaterialsByShow = cache(async (showId: string): Promise<Material
 })
 ```
 
-- [ ] **Step 4: Run full test suite — expect PASS**
+- [x] **Step 4: Run full test suite — expect PASS**
 
 ```bash
 npx vitest run
@@ -2707,7 +2708,7 @@ npx vitest run
 
 Expected: all tests pass. Investigate and fix any failures before continuing.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/\(app\)/\[orgSlug\]/shows/\[showSlug\]/meetings/
@@ -2718,7 +2719,7 @@ git commit -m "feat: add meeting list page and meeting room page"
 
 ## Task 15: Final wiring + smoke test
 
-- [ ] **Step 1: Add link to meetings from the show detail page**
+- [x] **Step 1: Add link to meetings from the show detail page**
 
 In the show detail page (find it under `app/(app)/[orgSlug]/shows/[showSlug]/page.tsx`), add a link:
 
@@ -2728,7 +2729,7 @@ In the show detail page (find it under `app/(app)/[orgSlug]/shows/[showSlug]/pag
 </a>
 ```
 
-- [ ] **Step 2: Start dev server and manually test the golden path**
+- [x] **Step 2: Start dev server and manually test the golden path**
 
 ```bash
 npm run dev
@@ -2748,14 +2749,14 @@ Walk through:
 11. Add a meeting note → it appears in the drawer
 12. End meeting (can_manage_show only) → banner appears for all connected members
 
-- [ ] **Step 3: Commit any fixes from smoke test**
+- [x] **Step 3: Commit any fixes from smoke test**
 
 ```bash
 git add -A
 git commit -m "fix: smoke test corrections for meeting mode"
 ```
 
-- [ ] **Step 4: Run full test suite one final time**
+- [x] **Step 4: Run full test suite one final time**
 
 ```bash
 npx vitest run
