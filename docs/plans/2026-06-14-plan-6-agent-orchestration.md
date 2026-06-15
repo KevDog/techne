@@ -1374,7 +1374,7 @@ git commit -m "feat: add SearchBar component with agent-powered search and tests
 - Create: `components/agents/DepartmentSummaryButton.tsx`
 - Create: `__tests__/components/agents/DepartmentSummaryButton.test.tsx`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```tsx
 // __tests__/components/agents/DepartmentSummaryButton.test.tsx
@@ -1493,13 +1493,13 @@ describe('DepartmentSummaryButton', () => {
 })
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 ```bash
 npx vitest run __tests__/components/agents/DepartmentSummaryButton.test.tsx
 ```
 
-- [ ] **Step 3: Implement `components/agents/DepartmentSummaryButton.tsx`**
+- [x] **Step 3: Implement `components/agents/DepartmentSummaryButton.tsx`**
 
 ```tsx
 'use client'
@@ -1593,13 +1593,13 @@ export function DepartmentSummaryButton({ materials, showName, departmentName }:
 }
 ```
 
-- [ ] **Step 4: Run tests — expect PASS**
+- [x] **Step 4: Run tests — expect PASS**
 
 ```bash
 npx vitest run __tests__/components/agents/DepartmentSummaryButton.test.tsx
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add components/agents/DepartmentSummaryButton.tsx __tests__/components/agents/DepartmentSummaryButton.test.tsx
