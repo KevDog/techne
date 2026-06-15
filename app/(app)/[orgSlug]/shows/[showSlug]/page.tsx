@@ -3,7 +3,9 @@ import { notFound } from 'next/navigation'
 import { getOrgBySlug } from '@/lib/data/orgs'
 import { getShowBySlug } from '@/lib/data/shows'
 import { getNotesByShow } from '@/lib/data/notes'
+import { getMaterialsByShow } from '@/lib/data/materials'
 import { ShowNotesSection } from './ShowNotesSection'
+import { SearchBar } from '@/components/agents/SearchBar'
 
 type Props = {
   params: Promise<{ orgSlug: string; showSlug: string }>
@@ -28,6 +30,14 @@ export default async function ShowDetailPage({ params }: Props) {
   if (!show) notFound()
 
   const showNotes = await getNotesByShow(show.id)
+
+  const materials = org.settings.claudeEnabled
+    ? await getMaterialsByShow(show.id)
+    : []
+
+  const departmentNameById = Object.fromEntries(
+    show.departments.map((d) => [d.id, d.name])
+  )
 
   const featuredMember = show.show_members.find((m) => m.featured)
 
@@ -57,6 +67,15 @@ export default async function ShowDetailPage({ params }: Props) {
             Meetings
           </Link>
         </nav>
+        {org.settings.claudeEnabled && (
+          <div className="mt-4 max-w-md">
+            <SearchBar
+              materials={materials}
+              showName={show.name}
+              departmentNameById={departmentNameById}
+            />
+          </div>
+        )}
       </div>
 
       {/* Two-column body */}

@@ -34,7 +34,7 @@
 
 | Plan | Subsystem | Status | File |
 | --- | --- | --- | --- |
-| 6 | Agent orchestration | Not started | TBD |
+| 6 | Agent orchestration | Ready | `docs/plans/2026-06-14-plan-6-agent-orchestration.md` |
 
 ---
 
