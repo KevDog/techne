@@ -13,6 +13,7 @@
     "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.104.1",
     "@liveblocks/client": "^3.19.5",
     "@liveblocks/node": "^3.19.5",
     "@liveblocks/react": "^3.19.5",
