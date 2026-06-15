@@ -1617,7 +1617,7 @@ The `DepartmentClient` already receives `materials`, `orgId`, `showId`, `deptId`
 - Modify: `app/(app)/[orgSlug]/shows/[showSlug]/departments/[deptSlug]/page.tsx`
 - Modify: `__tests__/app/(app)/[orgSlug]/shows/[showSlug]/departments/[deptSlug]/page.test.tsx`
 
-- [ ] **Step 1: Update `DepartmentClient.tsx` props interface**
+- [x] **Step 1: Update `DepartmentClient.tsx` props interface**
 
 Add three new props to the `Props` type at the top of the file:
 
@@ -1635,7 +1635,7 @@ type Props = {
 }
 ```
 
-- [ ] **Step 2: Add imports to `DepartmentClient.tsx`**
+- [x] **Step 2: Add imports to `DepartmentClient.tsx`**
 
 Add at the top of the file (after existing imports):
 
@@ -1647,7 +1647,7 @@ import { updateTags } from '@/lib/actions/materials'
 
 (`updateTags` is already imported via existing `materials` actions — verify and skip if already present.)
 
-- [ ] **Step 3: Destructure new props in `DepartmentClient` function signature**
+- [x] **Step 3: Destructure new props in `DepartmentClient` function signature**
 
 Change the function signature to destructure `claudeEnabled`, `showName`, and `departmentName`:
 
@@ -1658,7 +1658,7 @@ export function DepartmentClient({
 }: Props) {
 ```
 
-- [ ] **Step 4: Add `DepartmentSummaryButton` to the toolbar**
+- [x] **Step 4: Add `DepartmentSummaryButton` to the toolbar**
 
 In the toolbar `div` (the row containing the tab buttons and "+ Add Material" button), add the summary button when `claudeEnabled` is true. Place it between the tab group and the upload button:
 
@@ -1672,7 +1672,7 @@ In the toolbar `div` (the row containing the tab buttons and "+ Add Material" bu
 )}
 ```
 
-- [ ] **Step 5: Add `TagSuggestionButton` to the `DetailPanel`**
+- [x] **Step 5: Add `TagSuggestionButton` to the `DetailPanel`**
 
 In the `DetailPanel` component, add the button inside the Tags section, after the tags display and add-tag input. The `DetailPanel` receives `material` as a prop but needs `showName`, `departmentName`, and `existingTags`. Add these three to `DetailPanel`'s local props type and pass them through from `DepartmentClient`.
 
@@ -1725,7 +1725,7 @@ And inside the Tags section of `DetailPanel`, after the existing tag input row, 
 )}
 ```
 
-- [ ] **Step 6: Update `page.tsx` to pass new props**
+- [x] **Step 6: Update `page.tsx` to pass new props**
 
 In `app/(app)/[orgSlug]/shows/[showSlug]/departments/[deptSlug]/page.tsx`, the `org` object is already in scope (fetched via `getOrgBySlug`). The `show` object provides `name`. The `dept` object provides `name`. Pass them to `DepartmentClient`:
 
@@ -1743,11 +1743,11 @@ In `app/(app)/[orgSlug]/shows/[showSlug]/departments/[deptSlug]/page.tsx`, the `
 />
 ```
 
-- [ ] **Step 7: Update `page.test.tsx` to pass `claudeEnabled`, `showName`, and `departmentName`**
+- [x] **Step 7: Update `page.test.tsx` to pass `claudeEnabled`, `showName`, and `departmentName`**
 
 In `__tests__/app/(app)/[orgSlug]/shows/[showSlug]/departments/[deptSlug]/page.test.tsx`, update the `DepartmentClient` mock to accept the new props without error. The mock currently returns `<div data-testid="dept-client" />`, which is sufficient — no test change needed as long as TypeScript is satisfied. Verify the mock matches the updated prop signature.
 
-- [ ] **Step 8: Run all tests to verify no regressions**
+- [x] **Step 8: Run all tests to verify no regressions**
 
 ```bash
 npx vitest run
@@ -1755,7 +1755,7 @@ npx vitest run
 
 Expected: all tests PASS.
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add "app/(app)/[orgSlug]/shows/[showSlug]/departments/[deptSlug]/DepartmentClient.tsx" \
