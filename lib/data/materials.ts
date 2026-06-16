@@ -1,7 +1,10 @@
 import { cache } from 'react'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
-import type { Department, Material } from '@/lib/types/domain'
+import type { Department, Material, MaterialType } from '@/lib/types/domain'
 import { MaterialStateSchema, MaterialTypeSchema } from '@/lib/schemas/db-rows'
+
+const SIGNED_URL_TTL_SECONDS = 3600
+const SIGNABLE_TYPES: ReadonlySet<MaterialType> = new Set(['image', 'file'])
 
 type MaterialRow = {
   id: string
@@ -65,18 +68,25 @@ export const getMaterialsByDepartment = cache(
 
     if (error || !data) return []
 
-    return Promise.all(
-      data.map(async (row) => {
-        const material = mapRow(row)
-        let signedUrl: string | null = null
-        if (row.storage_path && (material.type === 'image' || material.type === 'file')) {
-          const { data: urlData } = await supabase.storage
-            .from('materials')
-            .createSignedUrl(row.storage_path, 3600)
-          signedUrl = urlData?.signedUrl ?? null
-        }
-        return { ...material, signedUrl }
-      })
-    )
+    const materials = data.map(mapRow)
+
+    const pathsToSign = materials
+      .filter((m) => m.storagePath && SIGNABLE_TYPES.has(m.type))
+      .map((m) => m.storagePath!)
+
+    const signedByPath = new Map<string, string>()
+    if (pathsToSign.length > 0) {
+      const { data: signed } = await supabase.storage
+        .from('materials')
+        .createSignedUrls(pathsToSign, SIGNED_URL_TTL_SECONDS)
+      for (const entry of signed ?? []) {
+        if (entry.path && entry.signedUrl) signedByPath.set(entry.path, entry.signedUrl)
+      }
+    }
+
+    return materials.map((material) => ({
+      ...material,
+      signedUrl: material.storagePath ? signedByPath.get(material.storagePath) ?? null : null,
+    }))
   }
 )
