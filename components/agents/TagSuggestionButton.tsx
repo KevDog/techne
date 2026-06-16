@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useTransition } from 'react'
 import { suggestTags } from '@/lib/actions/agents'
-import type { Material } from '@/lib/types/domain'
+import { useAsyncMutation } from '@/lib/hooks/useAsyncMutation'
+import type { AgentTagSuggestion, Material } from '@/lib/types/domain'
 
 type Props = {
   material: Material
@@ -12,12 +12,6 @@ type Props = {
   onAccept: (tags: string[]) => void
 }
 
-type State =
-  | { phase: 'idle' }
-  | { phase: 'loading' }
-  | { phase: 'done'; tags: string[]; rationale: string }
-  | { phase: 'error'; message: string }
-
 export function TagSuggestionButton({
   material,
   showName,
@@ -25,29 +19,16 @@ export function TagSuggestionButton({
   existingTags,
   onAccept,
 }: Props): React.ReactElement {
-  const [state, setState] = useState<State>({ phase: 'idle' })
-  const [, startTransition] = useTransition()
+  const { state, run, reset } = useAsyncMutation<AgentTagSuggestion>('Failed to get suggestions.')
 
   function handleSuggest(): void {
-    setState({ phase: 'loading' })
-    startTransition(async () => {
-      try {
-        const result = await suggestTags(material, showName, departmentName, existingTags)
-        setState({ phase: 'done', tags: result.tags, rationale: result.rationale })
-      } catch {
-        setState({ phase: 'error', message: 'Failed to get suggestions.' })
-      }
-    })
+    run(() => suggestTags(material, showName, departmentName, existingTags))
   }
 
   function handleAcceptAll(): void {
     if (state.phase !== 'done') return
-    onAccept(state.tags)
-    setState({ phase: 'idle' })
-  }
-
-  function handleDismiss(): void {
-    setState({ phase: 'idle' })
+    onAccept(state.result.tags)
+    reset()
   }
 
   if (state.phase === 'idle') {
@@ -63,32 +44,36 @@ export function TagSuggestionButton({
   }
 
   if (state.phase === 'loading') {
-    return <span className="text-xs text-purple-400 animate-pulse">Thinking…</span>
+    return (
+      <span className="text-xs text-purple-400 animate-pulse" aria-live="polite" aria-busy="true">
+        Thinking…
+      </span>
+    )
   }
 
   if (state.phase === 'error') {
     return (
-      <span className="text-xs text-red-400">
+      <span className="text-xs text-red-400" role="alert">
         {state.message}{' '}
-        <button onClick={handleDismiss} className="underline">
+        <button onClick={reset} className="underline">
           dismiss
         </button>
       </span>
     )
   }
 
-  // phase === 'done'
+  const { tags, rationale } = state.result
   return (
     <div className="mt-2 p-2 bg-purple-950/30 border border-purple-800 rounded text-xs space-y-2">
       <p className="text-purple-300 text-[10px] uppercase tracking-wider">AI suggestions</p>
       <div className="flex flex-wrap gap-1">
-        {state.tags.map((tag) => (
+        {tags.map((tag) => (
           <span key={tag} className="bg-purple-900/50 text-purple-200 px-2 py-0.5 rounded">
             {tag}
           </span>
         ))}
       </div>
-      {state.rationale && <p className="text-purple-400 text-[10px]">{state.rationale}</p>}
+      {rationale && <p className="text-purple-400 text-[10px]">{rationale}</p>}
       <div className="flex gap-2">
         <button
           onClick={handleAcceptAll}
@@ -96,7 +81,7 @@ export function TagSuggestionButton({
         >
           Accept all
         </button>
-        <button onClick={handleDismiss} className="text-xs text-purple-400 hover:text-purple-300">
+        <button onClick={reset} className="text-xs text-purple-400 hover:text-purple-300">
           Dismiss
         </button>
       </div>

@@ -1,6 +1,18 @@
 import { cache } from 'react'
+import { z } from 'zod'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
+import {
+  ApprovalModeSchema,
+  ShowDepartmentDetailSchema,
+  ShowDepartmentRefSchema,
+  ShowMemberSchema,
+  parseSeason,
+} from '@/lib/schemas/db-rows'
 import type { Org } from '@/lib/types/domain'
+
+const DeptRefsSchema = z.array(ShowDepartmentRefSchema).catch([])
+const DeptDetailsSchema = z.array(ShowDepartmentDetailSchema).catch([])
+const ShowMembersSchema = z.array(ShowMemberSchema).catch([])
 
 export type ShowWithRelations = {
   id: string
@@ -13,12 +25,7 @@ export type ShowWithRelations = {
   createdAt: string
   season: { name: string; slug: string } | null
   departments: { id: string }[]
-  show_members: {
-    id: string
-    featured: boolean
-    profiles: { display_name: string | null } | null
-    role_definitions: { name: string } | null
-  }[]
+  show_members: z.infer<typeof ShowMembersSchema>
 }
 
 export const getShowsByOrg = cache(async (org: Org): Promise<ShowWithRelations[]> => {
@@ -40,17 +47,15 @@ export const getShowsByOrg = cache(async (org: Org): Promise<ShowWithRelations[]
     slug: row.slug,
     orgId: row.org_id,
     seasonId: row.season_id,
-    approvalMode: row.approval_mode as 'single' | 'multi',
+    approvalMode: ApprovalModeSchema.parse(row.approval_mode),
     allowReopen: row.allow_reopen,
     createdAt: row.created_at,
-    season: Array.isArray(row.season) ? (row.season[0] ?? null) : (row.season ?? null),
-    departments: (row.departments as { id: string }[]) ?? [],
-    show_members: (row.show_members as ShowWithRelations['show_members']) ?? [],
+    season: parseSeason(row.season),
+    departments: DeptRefsSchema.parse(row.departments ?? []),
+    show_members: ShowMembersSchema.parse(row.show_members ?? []),
   }))
 })
 
-// ShowDetail overrides departments from ShowWithRelations (which only has { id }) to include
-// name, slug, and created_at for the detail view. getShowsByOrg callers should not cast to ShowDetail.
 export type ShowDetail = Omit<ShowWithRelations, 'departments'> & {
   departments: { id: string; name: string; slug: string; created_at: string }[]
 }
@@ -75,11 +80,11 @@ export const getShowBySlug = cache(async (org: Org, slug: string): Promise<ShowD
     slug: data.slug,
     orgId: data.org_id,
     seasonId: data.season_id,
-    approvalMode: data.approval_mode as 'single' | 'multi',
+    approvalMode: ApprovalModeSchema.parse(data.approval_mode),
     allowReopen: data.allow_reopen,
     createdAt: data.created_at,
-    season: Array.isArray(data.season) ? (data.season[0] ?? null) : (data.season ?? null),
-    departments: (data.departments as ShowDetail['departments']) ?? [],
-    show_members: (data.show_members as ShowWithRelations['show_members']) ?? [],
+    season: parseSeason(data.season),
+    departments: DeptDetailsSchema.parse(data.departments ?? []),
+    show_members: ShowMembersSchema.parse(data.show_members ?? []),
   }
 })

@@ -2,7 +2,7 @@
 
 import Anthropic from '@anthropic-ai/sdk'
 import { z } from 'zod'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { requireUser } from '@/lib/auth/require-user'
 import { buildTaggingPrompt } from '@/lib/agents/tagging'
 import { buildSearchPrompt, filterMaterialsByQuery } from '@/lib/agents/search'
 import { buildSummaryPrompt } from '@/lib/agents/summary'
@@ -33,19 +33,12 @@ function getClient(): Anthropic {
   return new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 }
 
-async function requireUserAndLimit(action: string): Promise<{ userId: string }> {
-  const supabase = await createSupabaseServerClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
-
+async function authAndLimit(action: string): Promise<void> {
+  const { user } = await requireUser()
   const result = rateLimit(`agent:${action}:${user.id}`, RATE_LIMIT_PER_MINUTE, RATE_WINDOW_MS)
   if (!result.ok) {
     throw new Error(`Rate limit exceeded. Try again in ${Math.ceil(result.retryAfterMs / 1000)}s.`)
   }
-
-  return { userId: user.id }
 }
 
 function extractText(response: Anthropic.Message): string {
@@ -71,7 +64,7 @@ export async function suggestTags(
 ): Promise<AgentTagSuggestion> {
   AgentShowNameSchema.parse(showName)
   AgentDepartmentNameSchema.parse(departmentName)
-  await requireUserAndLimit('suggestTags')
+  await authAndLimit('suggestTags')
 
   const prompt = buildTaggingPrompt(material, showName, departmentName, existingTagsAcrossDept)
   const client = getClient()
@@ -99,7 +92,7 @@ export async function searchWithSummary(
   AgentTextSchema.parse(query)
   AgentShowNameSchema.parse(showName)
   AgentDepartmentNameSchema.parse(departmentName)
-  await requireUserAndLimit('search')
+  await authAndLimit('search')
 
   const hits = filterMaterialsByQuery(materials, query)
   const prompt = buildSearchPrompt(query, hits, showName, departmentName)
@@ -136,7 +129,7 @@ export async function summarizeDepartment(
 ): Promise<AgentSummaryResult> {
   AgentShowNameSchema.parse(showName)
   AgentDepartmentNameSchema.parse(departmentName)
-  await requireUserAndLimit('summary')
+  await authAndLimit('summary')
 
   const prompt = buildSummaryPrompt(materials, showName, departmentName)
   const client = getClient()
