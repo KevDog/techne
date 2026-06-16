@@ -1,8 +1,9 @@
 'use server'
 
 import { z } from 'zod'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { requireUser } from '@/lib/auth/require-user'
 import { revalidateDepartment } from '@/lib/cache/revalidate'
+import { MaterialTagsSchema } from '@/lib/schemas/actions'
 import type { MaterialType, MaterialState } from '@/lib/types/domain'
 import { isValidTransition } from '@/lib/utils/material-transitions'
 
@@ -32,9 +33,7 @@ export async function createMaterial(
     data = { ...data, url: validateHttpUrl(data.url) }
   }
 
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase, user } = await requireUser()
 
   const { data: row, error } = await supabase
     .from('materials')
@@ -61,9 +60,7 @@ export async function transitionState(
   materialId: string,
   targetState: MaterialState
 ): Promise<void> {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase } = await requireUser()
 
   const { data: material, error: mErr } = await supabase
     .from('materials')
@@ -94,19 +91,14 @@ export async function transitionState(
   revalidateDepartment()
 }
 
-const TagSchema = z.string().min(1).max(50).regex(/^[a-z0-9-]+$/)
-const TagsSchema = z.array(TagSchema).max(20)
-
 export async function updateTags(
   materialId: string,
   tags: string[]
 ): Promise<void> {
-  const parsed = TagsSchema.safeParse(tags)
+  const parsed = MaterialTagsSchema.safeParse(tags)
   if (!parsed.success) throw new Error('Invalid tags')
 
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase } = await requireUser()
   const { error } = await supabase
     .from('materials')
     .update({ tags: parsed.data })
@@ -116,9 +108,7 @@ export async function updateTags(
 }
 
 export async function deleteMaterial(materialId: string): Promise<void> {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase, user } = await requireUser()
 
   const { data: material, error: mErr } = await supabase
     .from('materials')

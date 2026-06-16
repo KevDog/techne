@@ -1,11 +1,42 @@
 import { cache } from 'react'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
-import type {
-  Department,
-  Material,
-  MaterialType,
-  MaterialState,
-} from '@/lib/types/domain'
+import type { Department, Material, MaterialType } from '@/lib/types/domain'
+import { MaterialStateSchema, MaterialTypeSchema } from '@/lib/schemas/db-rows'
+
+const SIGNED_URL_TTL_SECONDS = 3600
+const SIGNABLE_TYPES: ReadonlySet<MaterialType> = new Set(['image', 'file'])
+
+type MaterialRow = {
+  id: string
+  department_id: string
+  uploaded_by: string
+  type: string
+  state: string
+  title: string
+  description: string | null
+  url: string | null
+  storage_path: string | null
+  body: string | null
+  tags: string[] | null
+  created_at: string
+}
+
+function mapRow(row: MaterialRow): Material {
+  return {
+    id: row.id,
+    departmentId: row.department_id,
+    uploadedBy: row.uploaded_by,
+    type: MaterialTypeSchema.parse(row.type),
+    state: MaterialStateSchema.parse(row.state),
+    title: row.title,
+    description: row.description,
+    url: row.url,
+    storagePath: row.storage_path,
+    body: row.body,
+    tags: row.tags ?? [],
+    createdAt: row.created_at,
+  }
+}
 
 export const getMaterialsByShow = cache(async (showId: string): Promise<Material[]> => {
   const supabase = await createSupabaseServerClient()
@@ -21,20 +52,7 @@ export const getMaterialsByShow = cache(async (showId: string): Promise<Material
     .in('department_id', deptIds)
     .order('created_at', { ascending: true })
   if (error || !data) return []
-  return data.map((row) => ({
-    id: row.id,
-    departmentId: row.department_id,
-    uploadedBy: row.uploaded_by,
-    type: row.type as MaterialType,
-    state: row.state as MaterialState,
-    title: row.title,
-    description: row.description,
-    url: row.url,
-    storagePath: row.storage_path,
-    body: row.body,
-    tags: row.tags ?? [],
-    createdAt: row.created_at,
-  }))
+  return data.map(mapRow)
 })
 
 export type MaterialWithUrl = Material & { signedUrl: string | null }
@@ -50,36 +68,25 @@ export const getMaterialsByDepartment = cache(
 
     if (error || !data) return []
 
-    return Promise.all(
-      data.map(async (row) => {
-        const material: Material = {
-          id: row.id,
-          departmentId: row.department_id,
-          uploadedBy: row.uploaded_by,
-          type: row.type as MaterialType,
-          state: row.state as MaterialState,
-          title: row.title,
-          description: row.description,
-          url: row.url,
-          storagePath: row.storage_path,
-          body: row.body,
-          tags: row.tags ?? [],
-          createdAt: row.created_at,
-        }
+    const materials = data.map(mapRow)
 
-        let signedUrl: string | null = null
-        if (
-          row.storage_path &&
-          (row.type === 'image' || row.type === 'file')
-        ) {
-          const { data: urlData } = await supabase.storage
-            .from('materials')
-            .createSignedUrl(row.storage_path, 3600)
-          signedUrl = urlData?.signedUrl ?? null
-        }
+    const pathsToSign = materials
+      .filter((m) => m.storagePath && SIGNABLE_TYPES.has(m.type))
+      .map((m) => m.storagePath!)
 
-        return { ...material, signedUrl }
-      })
-    )
+    const signedByPath = new Map<string, string>()
+    if (pathsToSign.length > 0) {
+      const { data: signed } = await supabase.storage
+        .from('materials')
+        .createSignedUrls(pathsToSign, SIGNED_URL_TTL_SECONDS)
+      for (const entry of signed ?? []) {
+        if (entry.path && entry.signedUrl) signedByPath.set(entry.path, entry.signedUrl)
+      }
+    }
+
+    return materials.map((material) => ({
+      ...material,
+      signedUrl: material.storagePath ? signedByPath.get(material.storagePath) ?? null : null,
+    }))
   }
 )

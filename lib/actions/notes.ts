@@ -1,13 +1,13 @@
 'use server'
 
-import { z } from 'zod'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { requireUser } from '@/lib/auth/require-user'
 import { revalidateDepartment, revalidateMeeting, revalidateShow } from '@/lib/cache/revalidate'
+import { NoteBodySchema, NoteTagsSchema, UuidSchema } from '@/lib/schemas/actions'
 import type { Database } from '@/lib/types/db'
 
-const noteIdSchema = z.string().uuid()
-const noteBodySchema = z.string().min(1).max(10000)
-const noteTagsSchema = z.array(z.string().max(50)).optional()
+const noteIdSchema = UuidSchema
+const noteBodySchema = NoteBodySchema
+const noteTagsSchema = NoteTagsSchema
 
 type NotesInsert = Database['public']['Tables']['notes']['Insert']
 
@@ -32,9 +32,7 @@ export async function createNote(
   noteBodySchema.parse(data.body)
   noteTagsSchema.parse(data.tags)
 
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase, user } = await requireUser()
 
   const insert: NotesInsert = {
     body: data.body,
@@ -68,9 +66,7 @@ export async function updateNote(
   noteBodySchema.parse(data.body)
   noteTagsSchema.parse(data.tags)
 
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase, user } = await requireUser()
 
   const { error } = await supabase
     .from('notes')
@@ -88,9 +84,7 @@ export async function updateNote(
 export async function hideNote(noteId: string): Promise<void> {
   noteIdSchema.parse(noteId)
 
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase } = await requireUser()
 
   const { error } = await supabase
     .from('notes')
@@ -103,9 +97,7 @@ export async function hideNote(noteId: string): Promise<void> {
 export async function restoreNote(noteId: string): Promise<void> {
   noteIdSchema.parse(noteId)
 
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase } = await requireUser()
 
   const { error } = await supabase
     .from('notes')
