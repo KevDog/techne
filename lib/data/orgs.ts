@@ -14,7 +14,7 @@ export const getOrgBySlug = cache(async (slug: string): Promise<Org | null> => {
     id: data.id,
     name: data.name,
     slug: data.slug,
-    settings: data.settings as Org['settings'],
+    settings: (data.settings ?? { claudeEnabled: false }) as Org['settings'],
     createdAt: data.created_at,
   }
 })

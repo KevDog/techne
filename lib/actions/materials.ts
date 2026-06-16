@@ -94,16 +94,22 @@ export async function transitionState(
   revalidatePath('', 'layout')
 }
 
+const TagSchema = z.string().min(1).max(50).regex(/^[a-z0-9-]+$/)
+const TagsSchema = z.array(TagSchema).max(20)
+
 export async function updateTags(
   materialId: string,
   tags: string[]
 ): Promise<void> {
+  const parsed = TagsSchema.safeParse(tags)
+  if (!parsed.success) throw new Error('Invalid tags')
+
   const supabase = await createSupabaseServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
   const { error } = await supabase
     .from('materials')
-    .update({ tags })
+    .update({ tags: parsed.data })
     .eq('id', materialId)
   if (error) throw new Error(error.message)
   revalidatePath('', 'layout')
