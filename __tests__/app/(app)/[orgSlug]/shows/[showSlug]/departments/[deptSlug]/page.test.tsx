@@ -28,7 +28,10 @@ vi.mock('@/lib/data/orgs', () => ({ getOrgBySlug: vi.fn().mockResolvedValue(org)
 vi.mock('@/lib/data/shows', () => ({ getShowBySlug: vi.fn().mockResolvedValue(mockShow) }))
 vi.mock('@/lib/data/departments', () => ({ getDepartmentBySlug: vi.fn().mockResolvedValue(mockDept) }))
 vi.mock('@/lib/data/materials', () => ({ getMaterialsByDepartment: vi.fn().mockResolvedValue(mockMaterials) }))
-vi.mock('@/lib/data/notes', () => ({ getNotesByMaterial: vi.fn().mockResolvedValue([]) }))
+vi.mock('@/lib/data/notes', () => ({
+  getNotesByMaterial: vi.fn().mockResolvedValue([]),
+  getNotesByMaterialIds: vi.fn().mockResolvedValue({}),
+}))
 vi.mock(
   '@/app/(app)/[orgSlug]/shows/[showSlug]/departments/[deptSlug]/DepartmentClient',
   () => ({ DepartmentClient: () => <div data-testid="dept-client" /> })
