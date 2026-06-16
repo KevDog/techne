@@ -9,17 +9,12 @@ import type { MaterialType, MaterialState, NoteWithAuthors } from '@/lib/types/d
 import { NoteList } from '@/components/NoteList'
 import { TagSuggestionButton } from '@/components/agents/TagSuggestionButton'
 import { DepartmentSummaryButton } from '@/components/agents/DepartmentSummaryButton'
+import { DeptProvider, useDeptContext, type DeptContextValue } from './DeptContext'
 
 type Props = {
   materials: MaterialWithUrl[]
   notesByMaterial: Record<string, NoteWithAuthors[]>
-  orgId: string
-  showId: string
-  deptId: string
-  allowReopen: boolean
-  claudeEnabled: boolean
-  showName: string
-  departmentName: string
+  dept: DeptContextValue
 }
 
 type TabFilter = 'all' | MaterialState
@@ -46,7 +41,22 @@ function StateBadge({ state }: { state: MaterialState }) {
   )
 }
 
-export function DepartmentClient({ materials, notesByMaterial, orgId, showId, deptId, allowReopen, claudeEnabled, showName, departmentName }: Props) {
+export function DepartmentClient({ materials, notesByMaterial, dept }: Props) {
+  return (
+    <DeptProvider value={dept}>
+      <DepartmentBody materials={materials} notesByMaterial={notesByMaterial} />
+    </DeptProvider>
+  )
+}
+
+function DepartmentBody({
+  materials,
+  notesByMaterial,
+}: {
+  materials: MaterialWithUrl[]
+  notesByMaterial: Record<string, NoteWithAuthors[]>
+}) {
+  const dept = useDeptContext()
   const [activeTab, setActiveTab] = useState<TabFilter>('all')
   const [selected, setSelected] = useState<MaterialWithUrl | null>(null)
   const [uploadOpen, setUploadOpen] = useState(false)
@@ -99,11 +109,11 @@ export function DepartmentClient({ materials, notesByMaterial, orgId, showId, de
             ))}
           </div>
           <div className="flex items-center gap-2">
-            {claudeEnabled && (
+            {dept.claudeEnabled && (
               <DepartmentSummaryButton
                 materials={materials}
-                showName={showName}
-                departmentName={departmentName}
+                showName={dept.showName}
+                departmentName={dept.departmentName}
               />
             )}
             <button
@@ -179,28 +189,19 @@ export function DepartmentClient({ materials, notesByMaterial, orgId, showId, de
         <DetailPanel
           material={selected}
           notes={notesByMaterial[selected.id] ?? []}
-          allowReopen={allowReopen}
           onClose={() => setSelected(null)}
           onTransition={handleTransition}
           onTagsChange={(newTags) => {
             setSelected((prev) => prev ? { ...prev, tags: newTags } : null)
           }}
           onDelete={handleDelete}
-          claudeEnabled={claudeEnabled}
-          showName={showName}
-          departmentName={departmentName}
           existingTags={[...new Set(materials.flatMap((m) => m.tags))]}
         />
       )}
 
       {/* Upload slide-over */}
       {uploadOpen && (
-        <UploadPanel
-          orgId={orgId}
-          showId={showId}
-          deptId={deptId}
-          onClose={() => setUploadOpen(false)}
-        />
+        <UploadPanel onClose={() => setUploadOpen(false)} />
       )}
     </div>
   )
@@ -211,28 +212,21 @@ export function DepartmentClient({ materials, notesByMaterial, orgId, showId, de
 function DetailPanel({
   material,
   notes,
-  allowReopen,
   onClose,
   onTransition,
   onTagsChange,
   onDelete,
-  claudeEnabled,
-  showName,
-  departmentName,
   existingTags,
 }: {
   material: MaterialWithUrl
   notes: NoteWithAuthors[]
-  allowReopen: boolean
   onClose: () => void
   onTransition: (id: string, target: MaterialState) => void
   onTagsChange: (tags: string[]) => void
   onDelete: (id: string) => void
-  claudeEnabled: boolean
-  showName: string
-  departmentName: string
   existingTags: string[]
 }) {
+  const dept = useDeptContext()
   const [newTag, setNewTag] = useState('')
 
   function addTag() {
@@ -328,11 +322,11 @@ function DetailPanel({
             +
           </button>
         </div>
-        {claudeEnabled && (
+        {dept.claudeEnabled && (
           <TagSuggestionButton
             material={material}
-            showName={showName}
-            departmentName={departmentName}
+            showName={dept.showName}
+            departmentName={dept.departmentName}
             existingTags={existingTags}
             onAccept={(suggestedTags) => {
               const merged = [...new Set([...material.tags, ...suggestedTags])]
@@ -368,7 +362,7 @@ function DetailPanel({
             Approve → Decided
           </button>
         )}
-        {material.state === 'decided' && allowReopen && (
+        {material.state === 'decided' && dept.allowReopen && (
           <button
             onClick={() => onTransition(material.id, 'proposed')}
             className="w-full rounded-md border border-zinc-300 dark:border-zinc-700 px-3 py-2 text-sm text-amber-600 dark:text-amber-400 hover:bg-zinc-50 dark:hover:bg-zinc-800"
@@ -391,17 +385,8 @@ function DetailPanel({
 
 // ── Upload Panel ──────────────────────────────────────────────────────────────
 
-function UploadPanel({
-  orgId,
-  showId,
-  deptId,
-  onClose,
-}: {
-  orgId: string
-  showId: string
-  deptId: string
-  onClose: () => void
-}) {
+function UploadPanel({ onClose }: { onClose: () => void }) {
+  const dept = useDeptContext()
   const [type, setType] = useState<MaterialType>('image')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -424,12 +409,12 @@ function UploadPanel({
         if (type === 'image' && !file.type.startsWith('image/')) throw new Error('File is not an image')
         const supabase = createSupabaseBrowserClient()
         const uploadUuid = crypto.randomUUID()
-        uploadedPath = `${orgId}/${showId}/${deptId}/${uploadUuid}/${file.name}`
+        uploadedPath = `${dept.orgId}/${dept.showId}/${dept.deptId}/${uploadUuid}/${file.name}`
         const { error } = await supabase.storage.from('materials').upload(uploadedPath, file)
         if (error) throw error
       }
 
-      await createMaterial(deptId, type, {
+      await createMaterial(dept.deptId, type, {
         title: title.trim(),
         description: description.trim() || undefined,
         url: type === 'link' ? url.trim() : undefined,

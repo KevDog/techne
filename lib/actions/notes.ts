@@ -1,13 +1,13 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { z } from 'zod'
 import { requireUser } from '@/lib/auth/require-user'
+import { NoteBodySchema, NoteTagsSchema, UuidSchema } from '@/lib/schemas/actions'
 import type { Database } from '@/lib/types/db'
 
-const noteIdSchema = z.string().uuid()
-const noteBodySchema = z.string().min(1).max(10000)
-const noteTagsSchema = z.array(z.string().max(50)).optional()
+const noteIdSchema = UuidSchema
+const noteBodySchema = NoteBodySchema
+const noteTagsSchema = NoteTagsSchema
 
 type NotesInsert = Database['public']['Tables']['notes']['Insert']
 

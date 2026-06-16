@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { revalidatePath } from 'next/cache'
 import { requireUser } from '@/lib/auth/require-user'
+import { MaterialTagsSchema } from '@/lib/schemas/actions'
 import type { MaterialType, MaterialState } from '@/lib/types/domain'
 import { isValidTransition } from '@/lib/utils/material-transitions'
 
@@ -90,14 +91,11 @@ export async function transitionState(
   revalidatePath('', 'layout')
 }
 
-const TagSchema = z.string().min(1).max(50).regex(/^[a-z0-9-]+$/)
-const TagsSchema = z.array(TagSchema).max(20)
-
 export async function updateTags(
   materialId: string,
   tags: string[]
 ): Promise<void> {
-  const parsed = TagsSchema.safeParse(tags)
+  const parsed = MaterialTagsSchema.safeParse(tags)
   if (!parsed.success) throw new Error('Invalid tags')
 
   const { supabase } = await requireUser()
