@@ -2,7 +2,7 @@
 
 import { z } from 'zod'
 import { revalidatePath } from 'next/cache'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { requireUser } from '@/lib/auth/require-user'
 import { MaterialTagsSchema } from '@/lib/schemas/actions'
 import type { MaterialType, MaterialState } from '@/lib/types/domain'
 import { isValidTransition } from '@/lib/utils/material-transitions'
@@ -33,9 +33,7 @@ export async function createMaterial(
     data = { ...data, url: validateHttpUrl(data.url) }
   }
 
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase, user } = await requireUser()
 
   const { data: row, error } = await supabase
     .from('materials')
@@ -62,9 +60,7 @@ export async function transitionState(
   materialId: string,
   targetState: MaterialState
 ): Promise<void> {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase } = await requireUser()
 
   const { data: material, error: mErr } = await supabase
     .from('materials')
@@ -102,9 +98,7 @@ export async function updateTags(
   const parsed = MaterialTagsSchema.safeParse(tags)
   if (!parsed.success) throw new Error('Invalid tags')
 
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase } = await requireUser()
   const { error } = await supabase
     .from('materials')
     .update({ tags: parsed.data })
@@ -114,9 +108,7 @@ export async function updateTags(
 }
 
 export async function deleteMaterial(materialId: string): Promise<void> {
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase, user } = await requireUser()
 
   const { data: material, error: mErr } = await supabase
     .from('materials')

@@ -1,11 +1,39 @@
 import { cache } from 'react'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
-import type {
-  Department,
-  Material,
-  MaterialType,
-  MaterialState,
-} from '@/lib/types/domain'
+import type { Department, Material } from '@/lib/types/domain'
+import { MaterialStateSchema, MaterialTypeSchema } from '@/lib/schemas/db-rows'
+
+type MaterialRow = {
+  id: string
+  department_id: string
+  uploaded_by: string
+  type: string
+  state: string
+  title: string
+  description: string | null
+  url: string | null
+  storage_path: string | null
+  body: string | null
+  tags: string[] | null
+  created_at: string
+}
+
+function mapRow(row: MaterialRow): Material {
+  return {
+    id: row.id,
+    departmentId: row.department_id,
+    uploadedBy: row.uploaded_by,
+    type: MaterialTypeSchema.parse(row.type),
+    state: MaterialStateSchema.parse(row.state),
+    title: row.title,
+    description: row.description,
+    url: row.url,
+    storagePath: row.storage_path,
+    body: row.body,
+    tags: row.tags ?? [],
+    createdAt: row.created_at,
+  }
+}
 
 export const getMaterialsByShow = cache(async (showId: string): Promise<Material[]> => {
   const supabase = await createSupabaseServerClient()
@@ -21,20 +49,7 @@ export const getMaterialsByShow = cache(async (showId: string): Promise<Material
     .in('department_id', deptIds)
     .order('created_at', { ascending: true })
   if (error || !data) return []
-  return data.map((row) => ({
-    id: row.id,
-    departmentId: row.department_id,
-    uploadedBy: row.uploaded_by,
-    type: row.type as MaterialType,
-    state: row.state as MaterialState,
-    title: row.title,
-    description: row.description,
-    url: row.url,
-    storagePath: row.storage_path,
-    body: row.body,
-    tags: row.tags ?? [],
-    createdAt: row.created_at,
-  }))
+  return data.map(mapRow)
 })
 
 export type MaterialWithUrl = Material & { signedUrl: string | null }
@@ -52,32 +67,14 @@ export const getMaterialsByDepartment = cache(
 
     return Promise.all(
       data.map(async (row) => {
-        const material: Material = {
-          id: row.id,
-          departmentId: row.department_id,
-          uploadedBy: row.uploaded_by,
-          type: row.type as MaterialType,
-          state: row.state as MaterialState,
-          title: row.title,
-          description: row.description,
-          url: row.url,
-          storagePath: row.storage_path,
-          body: row.body,
-          tags: row.tags ?? [],
-          createdAt: row.created_at,
-        }
-
+        const material = mapRow(row)
         let signedUrl: string | null = null
-        if (
-          row.storage_path &&
-          (row.type === 'image' || row.type === 'file')
-        ) {
+        if (row.storage_path && (material.type === 'image' || material.type === 'file')) {
           const { data: urlData } = await supabase.storage
             .from('materials')
             .createSignedUrl(row.storage_path, 3600)
           signedUrl = urlData?.signedUrl ?? null
         }
-
         return { ...material, signedUrl }
       })
     )
