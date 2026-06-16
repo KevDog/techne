@@ -4,6 +4,20 @@ import type { NoteWithAuthors } from '@/lib/types/domain'
 
 const NOTE_SELECT = 'id, body, tags, created_by, updated_by, created_at, updated_at, hidden_at, material_id, show_id, meeting_id'
 
+type NoteRow = {
+  id: string
+  body: string
+  tags: string[]
+  created_by: string
+  updated_by: string
+  created_at: string
+  updated_at: string
+  hidden_at: string | null
+  material_id: string | null
+  show_id: string | null
+  meeting_id: string | null
+}
+
 async function hydrateAuthors(
   supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
   rows: { created_by: string; updated_by: string }[]
@@ -17,15 +31,7 @@ async function hydrateAuthors(
   return Object.fromEntries((profiles ?? []).map((p) => [p.id, p.display_name ?? 'Unknown']))
 }
 
-function mapRow(
-  row: {
-    id: string; body: string; tags: string[]
-    created_by: string; updated_by: string
-    created_at: string; updated_at: string; hidden_at: string | null
-    material_id: string | null; show_id: string | null; meeting_id: string | null
-  },
-  nameMap: Record<string, string>
-): NoteWithAuthors {
+function mapRow(row: NoteRow, nameMap: Record<string, string>): NoteWithAuthors {
   return {
     id: row.id,
     body: row.body,
@@ -54,6 +60,31 @@ export const getNotesByMaterial = cache(
     if (error || !rows || rows.length === 0) return []
     const nameMap = await hydrateAuthors(supabase, rows)
     return rows.map((r) => mapRow(r, nameMap))
+  }
+)
+
+export const getNotesByMaterialIds = cache(
+  async (materialIds: readonly string[]): Promise<Record<string, NoteWithAuthors[]>> => {
+    if (materialIds.length === 0) return {}
+    const supabase = await createSupabaseServerClient()
+    const { data: rows, error } = await supabase
+      .from('notes')
+      .select(NOTE_SELECT)
+      .in('material_id', materialIds as string[])
+      .order('created_at', { ascending: true })
+    if (error || !rows) return Object.fromEntries(materialIds.map((id) => [id, []]))
+
+    const nameMap = await hydrateAuthors(supabase, rows)
+    const grouped: Record<string, NoteWithAuthors[]> = Object.fromEntries(
+      materialIds.map((id) => [id, []])
+    )
+    for (const row of rows) {
+      if (!row.material_id) continue
+      const note = mapRow(row, nameMap)
+      const bucket = grouped[row.material_id]
+      if (bucket) bucket.push(note)
+    }
+    return grouped
   }
 )
 

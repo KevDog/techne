@@ -89,6 +89,63 @@ describe('getNotesByMaterial', () => {
   })
 })
 
+describe('getNotesByMaterialIds', () => {
+  const notesIn = vi.fn()
+  const notesOrder = vi.fn()
+  const profilesIn = vi.fn()
+
+  beforeEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    notesIn.mockReturnValue({ order: notesOrder })
+    mockFrom.mockImplementation((table: string) => {
+      if (table === 'notes') return { select: vi.fn(() => ({ in: notesIn })) }
+      if (table === 'profiles') return { select: vi.fn(() => ({ in: profilesIn })) }
+      return {}
+    })
+  })
+
+  it('returns empty object when no ids passed', async () => {
+    const { getNotesByMaterialIds } = await import('@/lib/data/notes')
+    const result = await getNotesByMaterialIds([])
+    expect(result).toEqual({})
+    expect(notesIn).not.toHaveBeenCalled()
+  })
+
+  it('issues a single notes query for all ids', async () => {
+    notesOrder.mockResolvedValue({ data: [], error: null })
+    const { getNotesByMaterialIds } = await import('@/lib/data/notes')
+    await getNotesByMaterialIds(['mat-1', 'mat-2', 'mat-3'])
+    expect(notesIn).toHaveBeenCalledTimes(1)
+    expect(notesIn).toHaveBeenCalledWith('material_id', ['mat-1', 'mat-2', 'mat-3'])
+  })
+
+  it('groups notes by material_id and includes empty buckets', async () => {
+    const noteA = { ...mockNoteRow, id: 'n-a', material_id: 'mat-1' }
+    const noteB = { ...mockNoteRow, id: 'n-b', material_id: 'mat-2' }
+    const noteC = { ...mockNoteRow, id: 'n-c', material_id: 'mat-1' }
+    notesOrder.mockResolvedValue({ data: [noteA, noteC, noteB], error: null })
+    profilesIn.mockResolvedValue({
+      data: [{ id: 'user-1', display_name: 'Sarah M' }],
+      error: null,
+    })
+
+    const { getNotesByMaterialIds } = await import('@/lib/data/notes')
+    const result = await getNotesByMaterialIds(['mat-1', 'mat-2', 'mat-3'])
+
+    expect(result['mat-1']).toHaveLength(2)
+    expect(result['mat-2']).toHaveLength(1)
+    expect(result['mat-3']).toEqual([])
+  })
+
+  it('returns empty buckets for all ids on query error', async () => {
+    notesOrder.mockResolvedValue({ data: null, error: { message: 'fail' } })
+    const { getNotesByMaterialIds } = await import('@/lib/data/notes')
+    const result = await getNotesByMaterialIds(['mat-1', 'mat-2'])
+    expect(result).toEqual({ 'mat-1': [], 'mat-2': [] })
+  })
+})
+
 describe('getNotesByShow', () => {
   beforeEach(() => {
     vi.resetModules()
