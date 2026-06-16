@@ -24,6 +24,12 @@ const mockImageRow = {
   created_at: '2026-05-09',
 }
 
+const mockImageRow2 = {
+  ...mockImageRow,
+  id: 'm-3',
+  storage_path: 'org-1/show-1/dept-1/uuid/elevation.jpg',
+}
+
 const mockNoteRow = {
   id: 'm-2',
   department_id: 'dept-1',
@@ -39,8 +45,8 @@ const mockNoteRow = {
   created_at: '2026-05-09',
 }
 
-const mockCreateSignedUrl = vi.fn()
-const mockStorage = { from: vi.fn(() => ({ createSignedUrl: mockCreateSignedUrl })) }
+const mockCreateSignedUrls = vi.fn()
+const mockStorage = { from: vi.fn(() => ({ createSignedUrls: mockCreateSignedUrls })) }
 const mockOrder = vi.fn()
 const mockEq = vi.fn(() => ({ order: mockOrder }))
 const mockSelect = vi.fn(() => ({ eq: mockEq }))
@@ -64,22 +70,38 @@ describe('getMaterialsByDepartment', () => {
     expect(result).toEqual([])
   })
 
-  it('generates signed URL for image type', async () => {
-    mockOrder.mockResolvedValue({ data: [mockImageRow], error: null })
-    mockCreateSignedUrl.mockResolvedValue({
-      data: { signedUrl: 'https://example.com/signed' },
+  it('batches signed URL generation in a single call', async () => {
+    mockOrder.mockResolvedValue({
+      data: [mockImageRow, mockImageRow2, mockNoteRow],
+      error: null,
     })
+    mockCreateSignedUrls.mockResolvedValue({
+      data: [
+        { path: mockImageRow.storage_path, signedUrl: 'https://example.com/1' },
+        { path: mockImageRow2.storage_path, signedUrl: 'https://example.com/2' },
+      ],
+      error: null,
+    })
+
     const { getMaterialsByDepartment } = await import('@/lib/data/materials')
     const result = await getMaterialsByDepartment(mockDept)
-    expect(result[0].signedUrl).toBe('https://example.com/signed')
+
+    expect(mockCreateSignedUrls).toHaveBeenCalledTimes(1)
+    expect(mockCreateSignedUrls).toHaveBeenCalledWith(
+      [mockImageRow.storage_path, mockImageRow2.storage_path],
+      3600
+    )
+    expect(result[0]?.signedUrl).toBe('https://example.com/1')
+    expect(result[1]?.signedUrl).toBe('https://example.com/2')
+    expect(result[2]?.signedUrl).toBeNull()
   })
 
-  it('sets signedUrl to null for note type', async () => {
+  it('skips signed-url call entirely when no signable rows', async () => {
     mockOrder.mockResolvedValue({ data: [mockNoteRow], error: null })
     const { getMaterialsByDepartment } = await import('@/lib/data/materials')
     const result = await getMaterialsByDepartment(mockDept)
-    expect(result[0].signedUrl).toBeNull()
-    expect(mockCreateSignedUrl).not.toHaveBeenCalled()
+    expect(result[0]?.signedUrl).toBeNull()
+    expect(mockCreateSignedUrls).not.toHaveBeenCalled()
   })
 
   it('maps row fields to camelCase Material', async () => {

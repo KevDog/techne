@@ -7,6 +7,9 @@ import type {
   MaterialState,
 } from '@/lib/types/domain'
 
+const SIGNED_URL_TTL_SECONDS = 3600
+const SIGNABLE_TYPES: ReadonlySet<MaterialType> = new Set(['image', 'file'])
+
 export const getMaterialsByShow = cache(async (showId: string): Promise<Material[]> => {
   const supabase = await createSupabaseServerClient()
   const { data: depts } = await supabase
@@ -50,36 +53,37 @@ export const getMaterialsByDepartment = cache(
 
     if (error || !data) return []
 
-    return Promise.all(
-      data.map(async (row) => {
-        const material: Material = {
-          id: row.id,
-          departmentId: row.department_id,
-          uploadedBy: row.uploaded_by,
-          type: row.type as MaterialType,
-          state: row.state as MaterialState,
-          title: row.title,
-          description: row.description,
-          url: row.url,
-          storagePath: row.storage_path,
-          body: row.body,
-          tags: row.tags ?? [],
-          createdAt: row.created_at,
-        }
+    const pathsToSign = data
+      .filter(
+        (row): row is typeof row & { storage_path: string } =>
+          !!row.storage_path && SIGNABLE_TYPES.has(row.type as MaterialType)
+      )
+      .map((row) => row.storage_path)
 
-        let signedUrl: string | null = null
-        if (
-          row.storage_path &&
-          (row.type === 'image' || row.type === 'file')
-        ) {
-          const { data: urlData } = await supabase.storage
-            .from('materials')
-            .createSignedUrl(row.storage_path, 3600)
-          signedUrl = urlData?.signedUrl ?? null
-        }
+    const signedByPath = new Map<string, string>()
+    if (pathsToSign.length > 0) {
+      const { data: signed } = await supabase.storage
+        .from('materials')
+        .createSignedUrls(pathsToSign, SIGNED_URL_TTL_SECONDS)
+      for (const entry of signed ?? []) {
+        if (entry.path && entry.signedUrl) signedByPath.set(entry.path, entry.signedUrl)
+      }
+    }
 
-        return { ...material, signedUrl }
-      })
-    )
+    return data.map((row) => ({
+      id: row.id,
+      departmentId: row.department_id,
+      uploadedBy: row.uploaded_by,
+      type: row.type as MaterialType,
+      state: row.state as MaterialState,
+      title: row.title,
+      description: row.description,
+      url: row.url,
+      storagePath: row.storage_path,
+      body: row.body,
+      tags: row.tags ?? [],
+      createdAt: row.created_at,
+      signedUrl: row.storage_path ? signedByPath.get(row.storage_path) ?? null : null,
+    }))
   }
 )
