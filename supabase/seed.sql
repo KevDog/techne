@@ -64,11 +64,12 @@ insert into auth.users (id, email, encrypted_password, email_confirmed_at, creat
     'authenticated', 'authenticated'
   );
 
--- Profiles
+-- Profiles (upsert — trigger already creates a row from auth.users insert above)
 insert into public.profiles (id, display_name) values
   ('a0000000-0000-0000-0000-000000000001', 'Alex Rivera (Director)'),
   ('a0000000-0000-0000-0000-000000000002', 'Jordan Kim (Scenic Designer)'),
-  ('a0000000-0000-0000-0000-000000000003', 'Casey Morgan (Costume Designer)');
+  ('a0000000-0000-0000-0000-000000000003', 'Casey Morgan (Costume Designer)')
+on conflict (id) do update set display_name = excluded.display_name;
 
 -- Org members (all three in State U Theater)
 insert into public.org_members (org_id, user_id) values
