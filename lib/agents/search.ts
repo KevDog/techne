@@ -1,4 +1,5 @@
 import type { Material } from '@/lib/types/domain'
+import { sanitizeForPrompt, sanitizeTags } from './sanitize'
 
 export function filterMaterialsByQuery(materials: Material[], query: string): Material[] {
   const q = query.toLowerCase()
@@ -18,18 +19,24 @@ export function buildSearchPrompt(
   showName: string,
   departmentName: string
 ): string {
+  const cleanShow = sanitizeForPrompt(showName, 200)
+  const cleanDept = sanitizeForPrompt(departmentName, 200)
+  const cleanQuery = sanitizeForPrompt(query, 500)
+
   const hitsSummary = hits
-    .map(
-      (m, i) =>
-        `${i + 1}. [${m.state}] ${m.title} (${m.type})${m.description ? ` — ${m.description}` : ''}${m.tags.length > 0 ? ` [tags: ${m.tags.join(', ')}]` : ''}`
-    )
+    .map((m, i) => {
+      const title = sanitizeForPrompt(m.title, 300)
+      const desc = m.description ? ` — ${sanitizeForPrompt(m.description, 500)}` : ''
+      const tags = m.tags.length > 0 ? ` [tags: ${sanitizeTags(m.tags).join(', ')}]` : ''
+      return `${i + 1}. [${m.state}] ${title} (${m.type})${desc}${tags}`
+    })
     .join('\n')
 
   return `You are a theatrical design assistant helping a team find relevant design materials.
 
-Show: ${showName}
-Department: ${departmentName}
-User query: "${query}"
+Show: ${cleanShow}
+Department: ${cleanDept}
+User query: "${cleanQuery}"
 
 Matching materials found (${hits.length}):
 ${hitsSummary}

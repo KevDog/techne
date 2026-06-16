@@ -1,10 +1,20 @@
 'use server'
 
 import Anthropic from '@anthropic-ai/sdk'
+import { z } from 'zod'
 import { requireUser } from '@/lib/auth/require-user'
 import { buildTaggingPrompt } from '@/lib/agents/tagging'
 import { buildSearchPrompt, filterMaterialsByQuery } from '@/lib/agents/search'
 import { buildSummaryPrompt } from '@/lib/agents/summary'
+import { rateLimit } from '@/lib/rate-limit/in-memory'
+import {
+  AgentDepartmentNameSchema,
+  AgentSearchSummarySchema,
+  AgentShowNameSchema,
+  AgentSummaryResultSchema,
+  AgentTagSuggestionSchema,
+  AgentTextSchema,
+} from '@/lib/schemas/agents'
 import type {
   Material,
   AgentTagSuggestion,
@@ -13,6 +23,8 @@ import type {
 } from '@/lib/types/domain'
 
 const MODEL = 'claude-sonnet-4-5'
+const RATE_LIMIT_PER_MINUTE = 30
+const RATE_WINDOW_MS = 60_000
 
 function getClient(): Anthropic {
   if (!process.env.ANTHROPIC_API_KEY) {
@@ -21,14 +33,24 @@ function getClient(): Anthropic {
   return new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 }
 
+async function authAndLimit(action: string): Promise<void> {
+  const { user } = await requireUser()
+  const result = rateLimit(`agent:${action}:${user.id}`, RATE_LIMIT_PER_MINUTE, RATE_WINDOW_MS)
+  if (!result.ok) {
+    throw new Error(`Rate limit exceeded. Try again in ${Math.ceil(result.retryAfterMs / 1000)}s.`)
+  }
+}
+
 function extractText(response: Anthropic.Message): string {
   const block = response.content.find((b) => b.type === 'text')
   return block && block.type === 'text' ? block.text : ''
 }
 
-function parseJson<T>(text: string, fallback: T): T {
+function parseJsonWithSchema<T>(text: string, schema: z.ZodType<T>, fallback: T): T {
   try {
-    return JSON.parse(text) as T
+    const raw = JSON.parse(text)
+    const result = schema.safeParse(raw)
+    return result.success ? result.data : fallback
   } catch {
     return fallback
   }
@@ -40,7 +62,9 @@ export async function suggestTags(
   departmentName: string,
   existingTagsAcrossDept: string[]
 ): Promise<AgentTagSuggestion> {
-  await requireUser()
+  AgentShowNameSchema.parse(showName)
+  AgentDepartmentNameSchema.parse(departmentName)
+  await authAndLimit('suggestTags')
 
   const prompt = buildTaggingPrompt(material, showName, departmentName, existingTagsAcrossDept)
   const client = getClient()
@@ -51,8 +75,11 @@ export async function suggestTags(
     messages: [{ role: 'user', content: prompt }],
   })
 
-  const text = extractText(response)
-  return parseJson<AgentTagSuggestion>(text, { tags: [], rationale: 'Could not parse suggestion.' })
+  return parseJsonWithSchema<AgentTagSuggestion>(
+    extractText(response),
+    AgentTagSuggestionSchema,
+    { tags: [], rationale: 'Could not parse suggestion.' }
+  )
 }
 
 export async function searchWithSummary(
@@ -62,7 +89,10 @@ export async function searchWithSummary(
   departmentName: string,
   departmentNameById: Record<string, string>
 ): Promise<AgentSearchResult> {
-  await requireUser()
+  AgentTextSchema.parse(query)
+  AgentShowNameSchema.parse(showName)
+  AgentDepartmentNameSchema.parse(departmentName)
+  await authAndLimit('search')
 
   const hits = filterMaterialsByQuery(materials, query)
   const prompt = buildSearchPrompt(query, hits, showName, departmentName)
@@ -74,8 +104,11 @@ export async function searchWithSummary(
     messages: [{ role: 'user', content: prompt }],
   })
 
-  const text = extractText(response)
-  const parsed = parseJson<{ summary: string }>(text, { summary: 'No summary available.' })
+  const parsed = parseJsonWithSchema(
+    extractText(response),
+    AgentSearchSummarySchema,
+    { summary: 'No summary available.' }
+  )
 
   return {
     hits: hits.map((m) => ({
@@ -94,7 +127,9 @@ export async function summarizeDepartment(
   showName: string,
   departmentName: string
 ): Promise<AgentSummaryResult> {
-  await requireUser()
+  AgentShowNameSchema.parse(showName)
+  AgentDepartmentNameSchema.parse(departmentName)
+  await authAndLimit('summary')
 
   const prompt = buildSummaryPrompt(materials, showName, departmentName)
   const client = getClient()
@@ -105,16 +140,19 @@ export async function summarizeDepartment(
     messages: [{ role: 'user', content: prompt }],
   })
 
-  const text = extractText(response)
   const decided = materials.filter((m) => m.state === 'decided').length
   const proposed = materials.filter((m) => m.state === 'proposed').length
   const exploratory = materials.filter((m) => m.state === 'exploratory').length
 
-  return parseJson<AgentSummaryResult>(text, {
-    department: departmentName,
-    summary: 'Could not generate summary.',
-    decidedCount: decided,
-    proposedCount: proposed,
-    exploratoryCount: exploratory,
-  })
+  return parseJsonWithSchema<AgentSummaryResult>(
+    extractText(response),
+    AgentSummaryResultSchema,
+    {
+      department: departmentName,
+      summary: 'Could not generate summary.',
+      decidedCount: decided,
+      proposedCount: proposed,
+      exploratoryCount: exploratory,
+    }
+  )
 }
