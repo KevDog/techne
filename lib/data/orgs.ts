@@ -1,5 +1,6 @@
 import { cache } from 'react'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { OrgSettingsSchema } from '@/lib/schemas/db-rows'
 import type { Org } from '@/lib/types/domain'
 
 export const getOrgBySlug = cache(async (slug: string): Promise<Org | null> => {
@@ -14,7 +15,7 @@ export const getOrgBySlug = cache(async (slug: string): Promise<Org | null> => {
     id: data.id,
     name: data.name,
     slug: data.slug,
-    settings: (data.settings ?? { claudeEnabled: false }) as Org['settings'],
+    settings: OrgSettingsSchema.parse(data.settings ?? {}),
     createdAt: data.created_at,
   }
 })

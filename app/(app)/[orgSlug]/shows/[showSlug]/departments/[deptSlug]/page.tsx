@@ -4,8 +4,7 @@ import { getOrgBySlug } from '@/lib/data/orgs'
 import { getShowBySlug } from '@/lib/data/shows'
 import { getDepartmentBySlug } from '@/lib/data/departments'
 import { getMaterialsByDepartment } from '@/lib/data/materials'
-import { getNotesByMaterial } from '@/lib/data/notes'
-import type { NoteWithAuthors } from '@/lib/types/domain'
+import { getNotesByMaterialIds } from '@/lib/data/notes'
 import { DepartmentClient } from './DepartmentClient'
 
 type Props = {
@@ -25,13 +24,7 @@ export default async function DepartmentPage({ params }: Props) {
   if (!dept) notFound()
 
   const materials = await getMaterialsByDepartment(dept)
-
-  const notesByMaterial: Record<string, NoteWithAuthors[]> =
-    Object.fromEntries(
-      await Promise.all(
-        materials.map(async (m) => [m.id, await getNotesByMaterial(m.id)] as const)
-      )
-    )
+  const notesByMaterial = await getNotesByMaterialIds(materials.map((m) => m.id))
 
   return (
     <div>
@@ -59,13 +52,15 @@ export default async function DepartmentPage({ params }: Props) {
       <DepartmentClient
         materials={materials}
         notesByMaterial={notesByMaterial}
-        orgId={org.id}
-        showId={show.id}
-        deptId={dept.id}
-        allowReopen={show.allowReopen}
-        claudeEnabled={org.settings.claudeEnabled}
-        showName={show.name}
-        departmentName={dept.name}
+        dept={{
+          orgId: org.id,
+          showId: show.id,
+          deptId: dept.id,
+          allowReopen: show.allowReopen,
+          claudeEnabled: org.settings.claudeEnabled,
+          showName: show.name,
+          departmentName: dept.name,
+        }}
       />
     </div>
   )

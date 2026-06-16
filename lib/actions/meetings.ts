@@ -1,13 +1,18 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { z } from 'zod'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { requireUser } from '@/lib/auth/require-user'
 import { assertCanManageShow, assertShowMember } from '@/lib/auth/permissions'
+import {
+  MeetingTitleSchema,
+  NoteBodySchema,
+  ScheduledAtSchema,
+  UuidSchema,
+} from '@/lib/schemas/actions'
 
-const uuidSchema = z.string().uuid()
-const titleSchema = z.string().min(1).max(200)
-const scheduledAtSchema = z.string().datetime()
+const uuidSchema = UuidSchema
+const titleSchema = MeetingTitleSchema
+const scheduledAtSchema = ScheduledAtSchema
 
 export async function createMeeting(
   showId: string,
@@ -18,10 +23,7 @@ export async function createMeeting(
   titleSchema.parse(title)
   scheduledAtSchema.parse(scheduledAt)
 
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
-
+  const { supabase, user } = await requireUser()
   await assertCanManageShow(supabase, showId, user.id)
 
   const { data: row, error } = await supabase
@@ -38,9 +40,7 @@ export async function createMeeting(
 export async function startMeeting(meetingId: string): Promise<void> {
   uuidSchema.parse(meetingId)
 
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase, user } = await requireUser()
 
   const { data: meeting } = await supabase
     .from('meetings')
@@ -64,9 +64,7 @@ export async function startMeeting(meetingId: string): Promise<void> {
 export async function endMeeting(meetingId: string): Promise<void> {
   uuidSchema.parse(meetingId)
 
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase, user } = await requireUser()
 
   const { data: meeting } = await supabase
     .from('meetings')
@@ -91,11 +89,9 @@ export async function addMeetingNote(
   body: string
 ): Promise<{ id: string }> {
   uuidSchema.parse(meetingId)
-  z.string().min(1).max(10000).parse(body)
+  NoteBodySchema.parse(body)
 
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase, user } = await requireUser()
 
   const { data: row, error } = await supabase
     .from('notes')
@@ -111,9 +107,7 @@ export async function addMeetingNote(
 export async function hideMeetingNote(noteId: string): Promise<void> {
   uuidSchema.parse(noteId)
 
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase, user } = await requireUser()
 
   const { error } = await supabase
     .from('notes')
@@ -127,9 +121,7 @@ export async function hideMeetingNote(noteId: string): Promise<void> {
 export async function restoreMeetingNote(noteId: string): Promise<void> {
   uuidSchema.parse(noteId)
 
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase, user } = await requireUser()
 
   const { error } = await supabase
     .from('notes')
