@@ -111,6 +111,25 @@ export type NoteWithAuthors = Note & {
   updatedByName: string
 }
 
+/**
+ * Discriminated representation of a note's attachment target.
+ * The DB stores three nullable columns (material_id, show_id,
+ * meeting_id) under a CHECK constraint guaranteeing exactly one
+ * is set. This type makes that invariant visible to TypeScript;
+ * use noteAttachment(note) to derive it.
+ */
+export type NoteAttachment =
+  | { kind: 'material'; materialId: string }
+  | { kind: 'show'; showId: string }
+  | { kind: 'meeting'; meetingId: string }
+
+export function noteAttachment(note: Pick<Note, 'materialId' | 'showId' | 'meetingId'>): NoteAttachment | null {
+  if (note.materialId) return { kind: 'material', materialId: note.materialId }
+  if (note.meetingId) return { kind: 'meeting', meetingId: note.meetingId }
+  if (note.showId) return { kind: 'show', showId: note.showId }
+  return null
+}
+
 export type Meeting = {
   id: string
   showId: string

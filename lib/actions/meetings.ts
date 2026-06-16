@@ -4,10 +4,16 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { assertCanManageShow, assertShowMember } from '@/lib/auth/permissions'
+import {
+  MeetingTitleSchema,
+  NoteBodySchema,
+  ScheduledAtSchema,
+  UuidSchema,
+} from '@/lib/schemas/actions'
 
-const uuidSchema = z.string().uuid()
-const titleSchema = z.string().min(1).max(200)
-const scheduledAtSchema = z.string().datetime()
+const uuidSchema = UuidSchema
+const titleSchema = MeetingTitleSchema
+const scheduledAtSchema = ScheduledAtSchema
 
 export async function createMeeting(
   showId: string,
@@ -91,7 +97,7 @@ export async function addMeetingNote(
   body: string
 ): Promise<{ id: string }> {
   uuidSchema.parse(meetingId)
-  z.string().min(1).max(10000).parse(body)
+  NoteBodySchema.parse(body)
 
   const supabase = await createSupabaseServerClient()
   const { data: { user } } = await supabase.auth.getUser()
