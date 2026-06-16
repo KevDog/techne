@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { requireUser } from '@/lib/auth/require-user'
 import type { Database } from '@/lib/types/db'
 
 const noteIdSchema = z.string().uuid()
@@ -20,9 +20,7 @@ export async function createNote(
   noteBodySchema.parse(data.body)
   noteTagsSchema.parse(data.tags)
 
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase, user } = await requireUser()
 
   const insert: NotesInsert = {
     body: data.body,
@@ -52,9 +50,7 @@ export async function updateNote(
   noteBodySchema.parse(data.body)
   noteTagsSchema.parse(data.tags)
 
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase, user } = await requireUser()
 
   const { error } = await supabase
     .from('notes')
@@ -72,9 +68,7 @@ export async function updateNote(
 export async function hideNote(noteId: string): Promise<void> {
   noteIdSchema.parse(noteId)
 
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase } = await requireUser()
 
   const { error } = await supabase
     .from('notes')
@@ -87,9 +81,7 @@ export async function hideNote(noteId: string): Promise<void> {
 export async function restoreNote(noteId: string): Promise<void> {
   noteIdSchema.parse(noteId)
 
-  const supabase = await createSupabaseServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  const { supabase } = await requireUser()
 
   const { error } = await supabase
     .from('notes')

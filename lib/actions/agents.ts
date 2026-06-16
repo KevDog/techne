@@ -1,7 +1,7 @@
 'use server'
 
 import Anthropic from '@anthropic-ai/sdk'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { requireUser } from '@/lib/auth/require-user'
 import { buildTaggingPrompt } from '@/lib/agents/tagging'
 import { buildSearchPrompt, filterMaterialsByQuery } from '@/lib/agents/search'
 import { buildSummaryPrompt } from '@/lib/agents/summary'
@@ -19,14 +19,6 @@ function getClient(): Anthropic {
     throw new Error('ANTHROPIC_API_KEY is not set')
   }
   return new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-}
-
-async function assertAuthenticated(): Promise<void> {
-  const supabase = await createSupabaseServerClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
 }
 
 function extractText(response: Anthropic.Message): string {
@@ -48,7 +40,7 @@ export async function suggestTags(
   departmentName: string,
   existingTagsAcrossDept: string[]
 ): Promise<AgentTagSuggestion> {
-  await assertAuthenticated()
+  await requireUser()
 
   const prompt = buildTaggingPrompt(material, showName, departmentName, existingTagsAcrossDept)
   const client = getClient()
@@ -70,7 +62,7 @@ export async function searchWithSummary(
   departmentName: string,
   departmentNameById: Record<string, string>
 ): Promise<AgentSearchResult> {
-  await assertAuthenticated()
+  await requireUser()
 
   const hits = filterMaterialsByQuery(materials, query)
   const prompt = buildSearchPrompt(query, hits, showName, departmentName)
@@ -102,7 +94,7 @@ export async function summarizeDepartment(
   showName: string,
   departmentName: string
 ): Promise<AgentSummaryResult> {
-  await assertAuthenticated()
+  await requireUser()
 
   const prompt = buildSummaryPrompt(materials, showName, departmentName)
   const client = getClient()
