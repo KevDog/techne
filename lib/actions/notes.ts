@@ -1,8 +1,8 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { revalidateDepartment, revalidateMeeting, revalidateShow } from '@/lib/cache/revalidate'
 import type { Database } from '@/lib/types/db'
 
 const noteIdSchema = z.string().uuid()
@@ -12,6 +12,18 @@ const noteTagsSchema = z.array(z.string().max(50)).optional()
 type NotesInsert = Database['public']['Tables']['notes']['Insert']
 
 export type Attachment = { materialId: string } | { showId: string }
+
+function revalidateForAttachment(materialId: string | null, showId: string | null, meetingId: string | null): void {
+  if (materialId) revalidateDepartment()
+  else if (meetingId) revalidateMeeting()
+  else if (showId) revalidateShow()
+}
+
+function revalidateAllNoteSurfaces(): void {
+  revalidateDepartment()
+  revalidateShow()
+  revalidateMeeting()
+}
 
 export async function createNote(
   attachment: Attachment,
@@ -40,7 +52,11 @@ export async function createNote(
     .single()
   if (error || !row) throw new Error('Operation failed')
 
-  revalidatePath('', 'layout')
+  revalidateForAttachment(
+    'materialId' in attachment ? attachment.materialId : null,
+    'showId' in attachment ? attachment.showId : null,
+    null
+  )
   return { id: row.id }
 }
 
@@ -66,7 +82,7 @@ export async function updateNote(
     })
     .eq('id', noteId)
   if (error) throw new Error('Operation failed')
-  revalidatePath('', 'layout')
+  revalidateAllNoteSurfaces()
 }
 
 export async function hideNote(noteId: string): Promise<void> {
@@ -81,7 +97,7 @@ export async function hideNote(noteId: string): Promise<void> {
     .update({ hidden_at: new Date().toISOString() })
     .eq('id', noteId)
   if (error) throw new Error('Operation failed')
-  revalidatePath('', 'layout')
+  revalidateAllNoteSurfaces()
 }
 
 export async function restoreNote(noteId: string): Promise<void> {
@@ -96,5 +112,5 @@ export async function restoreNote(noteId: string): Promise<void> {
     .update({ hidden_at: null })
     .eq('id', noteId)
   if (error) throw new Error('Operation failed')
-  revalidatePath('', 'layout')
+  revalidateAllNoteSurfaces()
 }

@@ -1,8 +1,8 @@
 'use server'
 
 import { z } from 'zod'
-import { revalidatePath } from 'next/cache'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { revalidateDepartment } from '@/lib/cache/revalidate'
 import type { MaterialType, MaterialState } from '@/lib/types/domain'
 import { isValidTransition } from '@/lib/utils/material-transitions'
 
@@ -53,7 +53,7 @@ export async function createMaterial(
     .single()
   if (error || !row) throw new Error(error?.message ?? 'Insert failed')
 
-  revalidatePath('', 'layout')
+  revalidateDepartment()
   return { id: row.id }
 }
 
@@ -91,7 +91,7 @@ export async function transitionState(
     .eq('id', materialId)
   if (error) throw new Error(error.message)
 
-  revalidatePath('', 'layout')
+  revalidateDepartment()
 }
 
 const TagSchema = z.string().min(1).max(50).regex(/^[a-z0-9-]+$/)
@@ -112,7 +112,7 @@ export async function updateTags(
     .update({ tags: parsed.data })
     .eq('id', materialId)
   if (error) throw new Error(error.message)
-  revalidatePath('', 'layout')
+  revalidateDepartment()
 }
 
 export async function deleteMaterial(materialId: string): Promise<void> {
@@ -138,5 +138,5 @@ export async function deleteMaterial(materialId: string): Promise<void> {
   const { error } = await supabase.from('materials').delete().eq('id', materialId)
   if (error) throw new Error(error.message)
 
-  revalidatePath('', 'layout')
+  revalidateDepartment()
 }

@@ -1,9 +1,9 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { assertCanManageShow, assertShowMember } from '@/lib/auth/permissions'
+import { revalidateMeeting, revalidateShow } from '@/lib/cache/revalidate'
 
 const uuidSchema = z.string().uuid()
 const titleSchema = z.string().min(1).max(200)
@@ -31,7 +31,7 @@ export async function createMeeting(
     .single()
   if (error || !row) throw new Error('Operation failed')
 
-  revalidatePath('', 'layout')
+  revalidateShow()
   return { id: row.id }
 }
 
@@ -58,7 +58,7 @@ export async function startMeeting(meetingId: string): Promise<void> {
     .is('started_at', null)
   if (error) throw new Error('Operation failed')
 
-  revalidatePath('', 'layout')
+  revalidateMeeting()
 }
 
 export async function endMeeting(meetingId: string): Promise<void> {
@@ -83,7 +83,7 @@ export async function endMeeting(meetingId: string): Promise<void> {
     .eq('id', meetingId)
   if (error) throw new Error('Operation failed')
 
-  revalidatePath('', 'layout')
+  revalidateMeeting()
 }
 
 export async function addMeetingNote(
@@ -104,7 +104,7 @@ export async function addMeetingNote(
     .single()
   if (error || !row) throw new Error('Operation failed')
 
-  revalidatePath('', 'layout')
+  revalidateMeeting()
   return { id: row.id }
 }
 
@@ -121,7 +121,7 @@ export async function hideMeetingNote(noteId: string): Promise<void> {
     .eq('id', noteId)
     .eq('created_by', user.id)
   if (error) throw new Error('Operation failed')
-  revalidatePath('', 'layout')
+  revalidateMeeting()
 }
 
 export async function restoreMeetingNote(noteId: string): Promise<void> {
@@ -137,5 +137,5 @@ export async function restoreMeetingNote(noteId: string): Promise<void> {
     .eq('id', noteId)
     .eq('created_by', user.id)
   if (error) throw new Error('Operation failed')
-  revalidatePath('', 'layout')
+  revalidateMeeting()
 }
